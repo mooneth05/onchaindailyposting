@@ -4,7 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OnchainDailyPosting — Community Hub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <style>
+    /* SYSTEM FONT FALLBACKS — tampil duluan sebelum Google Fonts load */
+    @font-face {
+      font-family: 'Syne';
+      font-style: normal;
+      font-weight: 400 800;
+      src: local('Syne'), local('Arial Black');
+      font-display: swap;
+    }
+    body { font-family: 'Syne', 'Trebuchet MS', 'Arial Black', Arial, sans-serif !important; }
+    .logo-sub, .post-time, .post-badge, .stat-label, .section-tag,
+    .post-chain, .streak-rank, .streak-days, .streak-fire, .topic-count,
+    .chain-posts, .ticker-item, .footer-copy, .footer-links a,
+    .side-card-title, .compose-tag-btn { font-family: 'Space Mono', 'Courier New', Courier, monospace !important; }
+  </style>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -39,8 +56,8 @@
       inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
-      z-index: 999;
-      opacity: 0.5;
+      z-index: 1;
+      opacity: 0.3;
     }
 
     /* BACKGROUND BLOBS */
@@ -66,7 +83,7 @@
     @keyframes float3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
 
     /* LAYOUT */
-    .wrapper { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .wrapper { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
     /* ── HEADER ── */
     header {
@@ -74,7 +91,7 @@
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 200;
       background: rgba(10,10,15,0.85);
       backdrop-filter: blur(16px);
     }
@@ -568,6 +585,7 @@
       padding: 10px 0;
       margin-top: 0;
       position: relative;
+      z-index: 10;
     }
     .ticker-wrap::before,
     .ticker-wrap::after {
@@ -655,4 +673,376 @@
       letter-spacing: 0.3px;
     }
     .filter-tab:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
-    .filter-tab.active { background: var(--yellow
+    .filter-tab.active { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; }
+      .stats-strip { display: none; }
+      .main-grid { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="wrapper header-inner">
+    <div class="logo">
+      <div class="logo-icon">⛓️</div>
+      <div>
+        <div class="logo-text"><span>Onchain</span>DailyPosting</div>
+        <div class="logo-sub">Community Hub · ID</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#" class="active">Feed</a>
+      <a href="#">Explore</a>
+      <a href="#">Leaderboard</a>
+      <a href="#">Learn</a>
+    </nav>
+    <button class="header-cta">🔥 Post Sekarang</button>
+  </div>
+</header>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="tickerTrack">
+    <div class="ticker-set" id="tickerSet1"></div>
+    <div class="ticker-set" id="tickerSet2"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="wrapper">
+  <div class="hero">
+    <div>
+      <div class="hero-label"><span class="pulse"></span> Live Community</div>
+      <h1>
+        <span>Post setiap hari,</span>
+        <span class="line-yellow">build onchain,</span>
+        <span class="line-stroke">grow together.</span>
+      </h1>
+      <p class="hero-desc">
+        Komunitas builder & trader Indonesia yang konsisten posting aktivitas onchain setiap hari. Share alpha, track wallet, dan grow bersama.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary">🚀 Mulai Posting</button>
+        <button class="btn-ghost">Explore Feed →</button>
+      </div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-card">
+        <span class="stat-num">2.4K</span>
+        <span class="stat-label">Members</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">18.7K</span>
+        <span class="stat-label">Total Posts</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">312</span>
+        <span class="stat-label">Today</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">97%</span>
+        <span class="stat-label">Streak Rate</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="wrapper">
+  <div class="main-grid">
+
+    <!-- FEED COLUMN -->
+    <div>
+      <!-- COMPOSE -->
+      <div class="compose-bar">
+        <div class="compose-avatar">🔥</div>
+        <div style="flex:1">
+          <textarea class="compose-input" placeholder="Share aktivitas onchain kamu hari ini... #onchaindailyposting"></textarea>
+          <div class="compose-actions">
+            <button class="compose-tag-btn">#base</button>
+            <button class="compose-tag-btn">#eth</button>
+            <button class="compose-tag-btn">#solana</button>
+            <button class="compose-submit">Post ⚡</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="filter-tabs">
+        <button class="filter-tab active">Terbaru</button>
+        <button class="filter-tab">🔥 Trending</button>
+        <button class="filter-tab">⛓️ Base</button>
+        <button class="filter-tab">Ξ Ethereum</button>
+        <button class="filter-tab">◎ Solana</button>
+      </div>
+
+      <div class="section-head">
+        <div class="section-title">Daily Feed</div>
+        <div class="section-tag">312 posts hari ini</div>
+      </div>
+
+      <!-- FEED -->
+      <div class="feed" id="feed"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <!-- STREAK LEADERBOARD -->
+      <div class="side-card">
+        <div class="side-card-title">🔥 Top Streakers</div>
+        <div class="streak-list" id="streakList"></div>
+      </div>
+
+      <!-- TRENDING TOPICS -->
+      <div class="side-card">
+        <div class="side-card-title">📈 Trending Topics</div>
+        <div class="topic-list" id="topicList"></div>
+      </div>
+
+      <!-- CHAIN FILTER -->
+      <div class="side-card">
+        <div class="side-card-title">⛓️ By Chain</div>
+        <div class="chain-filter" id="chainList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrapper footer-inner">
+    <div class="footer-copy">© 2025 OnchainDailyPosting · Built for ID Web3 Community</div>
+    <div class="footer-links">
+      <a href="#">Telegram</a>
+      <a href="#">Farcaster</a>
+      <a href="#">Twitter/X</a>
+      <a href="#">About</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── DATA ──
+const posts = [
+  {
+    author: "moontrader.eth",
+    avatar: "🌙",
+    avatarBg: "linear-gradient(135deg,#ff6b35,#ff3cac)",
+    time: "2 menit lalu",
+    badge: "Alpha 🔥",
+    badgeColor: "#ff6b35",
+    badgeBg: "rgba(255,107,53,0.15)",
+    accentColor: "#ff6b35",
+    chain: "Base",
+    chainColor: "#3cf0e0",
+    content: `Baru swap <span class="highlight">12 ETH → USDC</span> di Uniswap V4 tadi. Gas fee-nya gila murah pakai <span class="tag">#Base</span> — cuma $0.002! 🤯 <span class="mention">@defilover.eth</span> kamu harus coba chain ini sekarang. Setup position dulu sebelum pump.`,
+    likes: 48, comments: 12, recasts: 7, accentClass: "orange"
+  },
+  {
+    author: "whalehunter.eth",
+    avatar: "🐋",
+    avatarBg: "linear-gradient(135deg,#9b5de5,#3cf0e0)",
+    time: "15 menit lalu",
+    badge: "Whale Watch 👁️",
+    badgeColor: "#9b5de5",
+    badgeBg: "rgba(155,93,229,0.15)",
+    accentColor: "#9b5de5",
+    chain: "Ethereum",
+    chainColor: "#9b5de5",
+    content: `Wallet <span class="highlight">0x7f2a...9d3e</span> baru pindahin <span class="highlight">500 ETH</span> ke Binance. Biasanya ini tanda mau dump. Monitor terus ya! Track di <span class="tag">#Arkham</span> kalau mau live update. Ini udah hari ke-<span class="highlight">47 streak</span> gue posting. 💪`,
+    likes: 112, comments: 34, recasts: 28, accentClass: "purple"
+  },
+  {
+    author: "defilover.eth",
+    avatar: "⚡",
+    avatarBg: "linear-gradient(135deg,#f5e642,#ff6b35)",
+    time: "32 menit lalu",
+    badge: "DeFi 💎",
+    badgeColor: "#f5e642",
+    badgeBg: "rgba(245,230,66,0.12)",
+    accentColor: "#f5e642",
+    chain: "Arbitrum",
+    chainColor: "#28a0f0",
+    content: `LP position gue di <span class="tag">#GMX</span> udah generate <span class="highlight">0.8 ETH</span> dalam 30 hari. Strategi: masuk saat volatilitas tinggi, ambil fee, keluar sebelum range keluar. Post hari ini sebagai bagian dari <span class="tag">#onchaindailyposting</span> challenge!`,
+    likes: 67, comments: 19, recasts: 15
+  },
+  {
+    author: "nftbuilder.eth",
+    avatar: "🎨",
+    avatarBg: "linear-gradient(135deg,#ff3cac,#9b5de5)",
+    time: "1 jam lalu",
+    badge: "Builder 🛠️",
+    badgeColor: "#ff3cac",
+    badgeBg: "rgba(255,60,172,0.12)",
+    accentColor: "#ff3cac",
+    chain: "Base",
+    chainColor: "#3cf0e0",
+    content: `Deploy smart contract pertama gue di <span class="tag">#Base</span> hari ini! Simple ERC-721 tapi ini milestone besar buat gue. Thanks komunitas <span class="mention">@onchaindailyposting</span> yang udah support. Hari ke-<span class="highlight">23</span> dan makin semangat! 🔥`,
+    likes: 89, comments: 41, recasts: 22
+  },
+  {
+    author: "cryptomom.eth",
+    avatar: "🌸",
+    avatarBg: "linear-gradient(135deg,#4dff91,#3cf0e0)",
+    time: "2 jam lalu",
+    badge: "Newbie 🌱",
+    badgeColor: "#4dff91",
+    badgeBg: "rgba(77,255,145,0.12)",
+    accentColor: "#4dff91",
+    chain: "Solana",
+    chainColor: "#9945ff",
+    content: `Akhirnya berhasil pakai <span class="tag">#Phantom</span> Wallet sendiri tanpa bantuan! Swap pertama di <span class="tag">#Jupiter</span> sukses 🎉. Terima kasih semua yang udah jelasin step by step di channel Telegram. Hari ke-5 dan baru belajar, semangat terus!`,
+    likes: 134, comments: 56, recasts: 31
+  }
+];
+
+const streakers = [
+  { rank: "1", emoji: "🌙", name: "moontrader.eth", bg: "linear-gradient(135deg,#ff6b35,#ff3cac)", days: "47 hari streak", fire: "🔥×47", color: "#ff6b35" },
+  { rank: "2", emoji: "🐋", name: "whalehunter.eth", bg: "linear-gradient(135deg,#9b5de5,#3cf0e0)", days: "38 hari streak", fire: "🔥×38", color: "#9b5de5" },
+  { rank: "3", emoji: "⚡", name: "defilover.eth", bg: "linear-gradient(135deg,#f5e642,#ff6b35)", days: "31 hari streak", fire: "🔥×31", color: "#f5e642" },
+  { rank: "4", emoji: "🎨", name: "nftbuilder.eth", bg: "linear-gradient(135deg,#ff3cac,#9b5de5)", days: "23 hari streak", fire: "🔥×23", color: "#ff3cac" },
+  { rank: "5", emoji: "🌸", name: "cryptomom.eth", bg: "linear-gradient(135deg,#4dff91,#3cf0e0)", days: "5 hari streak", fire: "🔥×5", color: "#4dff91" },
+];
+
+const topics = [
+  { name: "#onchaindailyposting", count: "312 posts", color: "#f5e642" },
+  { name: "#base", count: "189 posts", color: "#3cf0e0" },
+  { name: "#ethereum", count: "#147 posts", color: "#9b5de5" },
+  { name: "#defi", count: "98 posts", color: "#ff6b35" },
+  { name: "#nft", count: "76 posts", color: "#ff3cac" },
+];
+
+const chains = [
+  { logo: "🔵", name: "Base", posts: "189 posts", color: "#3cf0e0", active: true },
+  { logo: "Ξ", name: "Ethereum", posts: "147 posts", color: "#9b5de5" },
+  { logo: "◎", name: "Solana", posts: "88 posts", color: "#9945ff" },
+  { logo: "🔺", name: "Arbitrum", posts: "54 posts", color: "#28a0f0" },
+  { logo: "🟣", name: "Polygon", posts: "33 posts", color: "#8247e5" },
+];
+
+const tickers = [
+  { sym: "ETH", price: "$3,842", change: "+2.4%", up: true },
+  { sym: "BTC", price: "$67,210", change: "+1.1%", up: true },
+  { sym: "SOL", price: "$182.50", change: "-0.8%", up: false },
+  { sym: "BASE GAS", price: "$0.002", change: "-12%", up: true },
+  { sym: "ARB", price: "$1.24", change: "+5.2%", up: true },
+  { sym: "OP", price: "$2.87", change: "-1.3%", up: false },
+];
+
+// ── RENDER ──
+function renderTicker() {
+  const makeItems = () => tickers.map(t => `
+    <span class="ticker-item">
+      <span class="ticker-sym">${t.sym}</span>
+      <span>${t.price}</span>
+      <span class="${t.up ? 'up' : 'down'}">${t.change}</span>
+    </span>
+  `).join('');
+  document.getElementById('tickerSet1').innerHTML = makeItems();
+  document.getElementById('tickerSet2').innerHTML = makeItems();
+}
+
+function renderFeed() {
+  const feed = document.getElementById('feed');
+  feed.innerHTML = posts.map((p, i) => `
+    <div class="post-card" style="animation-delay:${i*0.07}s">
+      <div class="post-accent" style="background:${p.accentColor}"></div>
+      <div class="post-header">
+        <div class="avatar" style="background:${p.avatarBg}">${p.avatar}</div>
+        <div class="post-meta">
+          <div class="post-author">${p.author}</div>
+          <div class="post-time">${p.time}</div>
+        </div>
+        <div class="post-badge" style="color:${p.badgeColor};background:${p.badgeBg}">${p.badge}</div>
+      </div>
+      <div class="post-content">${p.content}</div>
+      <div class="post-chain">
+        <div class="chain-dot" style="background:${p.chainColor}"></div>
+        ${p.chain}
+      </div>
+      <div class="post-footer">
+        <button class="reaction-btn" onclick="like(this)">❤️ ${p.likes}</button>
+        <button class="reaction-btn">💬 ${p.comments}</button>
+        <button class="reaction-btn">🔁 ${p.recasts}</button>
+        <button class="post-share">↗ Share</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStreakers() {
+  const el = document.getElementById('streakList');
+  el.innerHTML = streakers.map(s => `
+    <div class="streak-item">
+      <div class="streak-rank ${parseInt(s.rank) <= 3 ? 'top' : ''}">#${s.rank}</div>
+      <div class="streak-avatar" style="background:${s.bg}">${s.emoji}</div>
+      <div class="streak-info">
+        <div class="streak-name">${s.name}</div>
+        <div class="streak-days">${s.days}</div>
+      </div>
+      <div class="streak-fire" style="color:${s.color}">${s.fire}</div>
+    </div>
+  `).join('');
+}
+
+function renderTopics() {
+  const el = document.getElementById('topicList');
+  el.innerHTML = topics.map(t => `
+    <div class="topic-item">
+      <div class="topic-name" style="color:${t.color}">${t.name}</div>
+      <div class="topic-count">${t.count}</div>
+    </div>
+  `).join('');
+}
+
+function renderChains() {
+  const el = document.getElementById('chainList');
+  el.innerHTML = chains.map(c => `
+    <div class="chain-item ${c.active ? 'active' : ''}" onclick="selectChain(this)">
+      <div class="chain-left">
+        <div class="chain-logo" style="background:rgba(255,255,255,0.06)">${c.logo}</div>
+        <div class="chain-name" style="color:${c.color}">${c.name}</div>
+      </div>
+      <div class="chain-posts">${c.posts}</div>
+    </div>
+  `).join('');
+}
+
+function like(btn) {
+  btn.classList.toggle('active');
+  const num = parseInt(btn.textContent.replace('❤️ ',''));
+  btn.innerHTML = `❤️ ${btn.classList.contains('active') ? num+1 : num-1}`;
+}
+
+function selectChain(el) {
+  document.querySelectorAll('.chain-item').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Filter tabs
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+renderTicker();
+renderFeed();
+renderStreakers();
+renderTopics();
+renderChains();
+</script>
+</body>
+</html>
