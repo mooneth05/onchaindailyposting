@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Roadmap — OnchainDailyPosting</title>
+<meta name="description" content="Roadmap resmi OnchainDailyPosting — perjalanan dari komunitas Genesis menuju ekosistem Web3 terbesar Indonesia."/>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--bg2:#0d0d18;--card:#0f0f1c;--card2:#141425;
+  --border:#1c1c30;--border2:#252540;
+  --yellow:#f0e040;--orange:#ff5c1a;--pink:#f02d7a;
+  --cyan:#00e5cc;--green:#39ff7e;--purple:#8855ff;--blue:#2d7aff;
+  --white:#eeeef8;--muted:#5a5a7a;--muted2:#8888aa;
+  --fd:'Syne',sans-serif;--fm:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--fd);overflow-x:hidden;min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
+
+/* BLOBS */
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.08}
+.b1{width:700px;height:700px;background:radial-gradient(circle,var(--orange),transparent);top:-200px;left:-150px;animation:bf 14s ease-in-out infinite}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--cyan),transparent);top:30%;right:-120px;animation:bf 18s ease-in-out infinite;animation-delay:-6s}
+.b3{width:400px;height:400px;background:radial-gradient(circle,var(--yellow),transparent);bottom:-80px;left:40%;animation:bf 12s ease-in-out infinite;animation-delay:-3s}
+@keyframes bf{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,25px) scale(1.05)}66%{transform:translate(-20px,15px) scale(.97)}}
+
+.wrapper{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:0 28px}
+
+/* HEADER */
+header{padding:18px 0;border-bottom:1px solid var(--border);background:rgba(8,8,16,.92);backdrop-filter:blur(24px);position:sticky;top:0;z-index:500}
+.hi{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--yellow);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 0 18px rgba(240,224,64,.3);transition:transform .2s,box-shadow .2s}
+.logo:hover .logo-icon{transform:rotate(-5deg);box-shadow:0 0 28px rgba(240,224,64,.5)}
+.logo-text{font-size:1rem;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:var(--white)}
+.logo-text span{color:var(--yellow)}
+.logo-sub{font-size:.58rem;font-family:var(--fm);color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-links a{padding:7px 14px;border-radius:8px;font-size:.74rem;font-weight:700;text-decoration:none;color:var(--muted2);transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--white);background:var(--border)}
+.nav-links a.active{color:var(--bg);background:var(--yellow)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;background:var(--card);border:1px solid var(--border);color:var(--muted2);font-size:.74rem;font-weight:700;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.back-btn:hover{border-color:var(--border2);color:var(--white)}
+
+/* HERO */
+.hero{padding:64px 0 48px;text-align:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(255,92,26,.1);border:1px solid rgba(255,92,26,.25);border-radius:20px;font-size:.68rem;font-family:var(--fm);color:var(--orange);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px}
+.lp{width:7px;height:7px;background:var(--orange);border-radius:50%;animation:lp 1.4s ease-in-out infinite}
+@keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:800;line-height:1.04;letter-spacing:-2.5px;margin-bottom:16px}
+.hero h1 em{font-style:normal;color:var(--orange)}
+.hero-sub{font-size:.95rem;color:var(--muted2);line-height:1.7;max-width:500px;margin:0 auto 36px}
+
+/* PROGRESS BAR */
+.progress-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:64px}
+.prog-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px;text-align:center;position:relative;overflow:hidden;transition:transform .2s}
+.prog-item:hover{transform:translateY(-3px)}
+.prog-item::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.prog-item:nth-child(1)::before{background:var(--yellow)}
+.prog-item:nth-child(2)::before{background:linear-gradient(90deg,var(--orange),var(--pink))}
+.prog-item:nth-child(3)::before{background:var(--cyan)}
+.prog-item:nth-child(4)::before{background:var(--purple)}
+.prog-num{font-size:1.6rem;font-weight:800;letter-spacing:-1px;margin-bottom:4px}
+.prog-item:nth-child(1) .prog-num{color:var(--yellow)}
+.prog-item:nth-child(2) .prog-num{color:var(--orange)}
+.prog-item:nth-child(3) .prog-num{color:var(--cyan)}
+.prog-item:nth-child(4) .prog-num{color:var(--purple)}
+.prog-label{font-size:.62rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+
+/* TIMELINE */
+.timeline{position:relative}
+.timeline::before{content:'';position:absolute;left:28px;top:20px;bottom:20px;width:2px;background:linear-gradient(to bottom,var(--yellow) 0%,var(--orange) 25%,var(--cyan) 55%,var(--purple) 100%);opacity:.25;border-radius:2px}
+
+.phase{display:flex;gap:28px;margin-bottom:36px;animation:fadeUp .55s ease both}
+.phase:nth-child(1){animation-delay:.05s}
+.phase:nth-child(2){animation-delay:.12s}
+.phase:nth-child(3){animation-delay:.19s}
+.phase:nth-child(4){animation-delay:.26s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.phase-dot-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:6px}
+.phase-dot{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;position:relative;z-index:1;border:2px solid var(--border2);flex-shrink:0;transition:transform .2s}
+.phase-dot:hover{transform:scale(1.05)}
+.phase-dot.done{background:var(--yellow);border-color:var(--yellow);box-shadow:0 0 24px rgba(240,224,64,.3)}
+.phase-dot.now{background:linear-gradient(135deg,var(--orange),var(--pink));border-color:var(--orange);box-shadow:0 0 24px rgba(255,92,26,.35);animation:nowPulse 2.2s ease-in-out infinite}
+.phase-dot.soon{background:var(--card2);border-color:rgba(0,229,204,.3);box-shadow:0 0 16px rgba(0,229,204,.1)}
+.phase-dot.future{background:var(--card);border-color:rgba(136,85,255,.25)}
+@keyframes nowPulse{0%,100%{box-shadow:0 0 24px rgba(255,92,26,.35)}50%{box-shadow:0 0 40px rgba(255,92,26,.6)}}
+
+.phase-body{flex:1}
+.phase-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.phase-num{font-size:.62rem;font-family:var(--fm);color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;background:var(--card);border:1px solid var(--border);padding:3px 10px;border-radius:6px}
+.phase-title{font-size:1.15rem;font-weight:800;letter-spacing:-.4px}
+.phase-badge{font-size:.58rem;font-family:var(--fm);padding:4px 10px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.phase-badge.done{background:rgba(240,224,64,.15);color:var(--yellow);border:1px solid rgba(240,224,64,.2)}
+.phase-badge.now{background:rgba(255,92,26,.15);color:var(--orange);border:1px solid rgba(255,92,26,.2)}
+.phase-badge.soon{background:rgba(0,229,204,.1);color:var(--cyan);border:1px solid rgba(0,229,204,.2)}
+.phase-badge.future{background:rgba(136,85,255,.1);color:var(--purple);border:1px solid rgba(136,85,255,.2)}
+
+.phase-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;transition:border-color .2s}
+.phase-card:hover{border-color:var(--border2)}
+.phase-items{display:flex;flex-direction:column;gap:12px}
+.phase-item{display:flex;align-items:flex-start;gap:12px;font-size:.86rem;color:#c0c0dc;line-height:1.6}
+.item-icon{font-size:.9rem;flex-shrink:0;margin-top:.1em;width:18px;text-align:center}
+.item-text strong{color:var(--white);font-weight:700}
+.item-text .tag-link{color:var(--cyan);font-weight:700;text-decoration:none}
+.item-text .tag-link:hover{text-decoration:underline}
+.phase-footer{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.phase-date{font-size:.62rem;font-family:var(--fm);color:var(--muted);letter-spacing:1px}
+.phase-pct{font-size:.7rem;font-family:var(--fm);font-weight:700}
+.pct-bar{flex:1;min-width:80px;height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin:0 10px}
+.pct-fill{height:100%;border-radius:4px;transition:width 1s ease}
+
+/* CTA */
+.cta-block{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;text-align:center;margin:48px 0 80px;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,92,26,.07),transparent 60%)}
+.cta-title{font-size:1.5rem;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.cta-sub{font-size:.88rem;color:var(--muted2);line-height:1.7;margin-bottom:28px;max-width:420px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:800;font-size:.82rem;transition:transform .15s,box-shadow .2s}
+.cta-btn.primary{background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff}
+.cta-btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,92,26,.4)}
+.cta-btn.ghost{background:rgba(0,229,204,.08);border:1px solid rgba(0,229,204,.25);color:var(--cyan)}
+.cta-btn.ghost:hover{transform:translateY(-2px);background:rgba(0,229,204,.15)}
+.cta-btn.dark{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2)}
+.cta-btn.dark:hover{color:var(--white);border-color:var(--border2);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 0;background:var(--bg2)}
+.fi{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fc{font-size:.65rem;font-family:var(--fm);color:var(--muted)}
+.fl{display:flex;gap:16px;flex-wrap:wrap}
+.fl a{font-size:.65rem;font-family:var(--fm);color:var(--muted);text-decoration:none;transition:color .15s}
+.fl a:hover{color:var(--cyan)}
+
+@media(max-width:700px){
+  .progress-strip{grid-template-columns:1fr 1fr}
+  .timeline::before{left:22px}
+  .phase-dot{width:46px;height:46px;font-size:1.1rem;border-radius:12px}
+  .phase{gap:18px}
+  .nav-links{display:none}
+}
+@media(max-width:480px){
+  .wrapper{padding:0 16px}
+  .hero{padding:44px 0 32px}
+  .hero h1{font-size:2.2rem;letter-spacing:-2px}
+  .progress-strip{grid-template-columns:1fr 1fr;gap:8px}
+  .cta-btns{flex-direction:column;align-items:center}
+  .cta-btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<header>
+  <div class="wrapper hi">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⛓️</div>
+      <div>
+        <div class="logo-text"><span>Onchain</span>DailyPosting</div>
+        <div class="logo-sub">Community Hub · ID</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Feed</a>
+      <a href="index.html#explore">Explore</a>
+      <a href="roadmap.html" class="active">Roadmap</a>
+      <a href="whitepaper.html">Whitepaper</a>
+    </div>
+    <a href="index.html" class="back-btn">← Kembali</a>
+  </div>
+</header>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge"><span class="lp"></span> Official Roadmap</div>
+    <h1>Perjalanan <em>OnchainDailyPosting</em></h1>
+    <p class="hero-sub">Dari komunitas sederhana menjadi ekosistem Web3 terbesar untuk builder Indonesia. Setiap fase dibangun bersama komunitas — transparan, onchain, dan berkelanjutan.</p>
+  </div>
+
+  <!-- PROGRESS STRIP -->
+  <div class="progress-strip">
+    <div class="prog-item">
+      <div class="prog-num">100%</div>
+      <div class="prog-label">Phase 1 Done</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">60%</div>
+      <div class="prog-label">Phase 2 Progress</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">Q3 '25</div>
+      <div class="prog-label">Phase 3 Target</div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-num">Q4 '25</div>
+      <div class="prog-label">Token Launch</div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <!-- PHASE 1 -->
+    <div class="phase">
+      <div class="phase-dot-col">
+        <div class="phase-dot done">✅</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-header">
+          <span class="phase-num">Phase 01</span>
+          <span class="phase-title">Genesis — Fondasi Komunitas</span>
+          <span class="phase-badge done">✓ Selesai</span>
+        </div>
+        <div class="phase-card">
+          <div class="phase-items">
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Launch OnchainDailyPosting</strong> — platform pertama komunitas posting aktivitas onchain harian di Indonesia, dibangun sebagai static site di GitHub Pages</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Daily Feed System</strong> — sistem posting dengan filter berdasarkan chain (Base, Ethereum, Solana, Arbitrum), trending topics, dan timestamp real-time</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Streak Leaderboard</strong> — gamifikasi konsistensi posting dengan ranking harian dan weekly leaderboard top 10 builder</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Live Crypto Ticker</strong> — harga ETH, BTC, SOL, ARB, OP, UNI secara real-time via CoinGecko API dengan auto-refresh setiap 60 detik</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Multi-chain Support</strong> — Base, Ethereum, Solana, Arbitrum, Polygon terintegrasi dalam satu hub dengan chain filter dan analytics</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Community Hub</strong> — Telegram <a href="https://t.me/mooneth05" target="_blank" class="tag-link">@mooneth05</a> dan Farcaster <a href="https://farcaster.xyz/moooneth" target="_blank" class="tag-link">/moooneth</a> aktif</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Web3 Learn Center</strong> — 6 panduan lengkap dari setup wallet pertama sampai deploy smart contract dalam Bahasa Indonesia</span></div>
+          </div>
+          <div class="phase-footer">
+            <span class="phase-date">Q4 2024 — Completed</span>
+            <div style="display:flex;align-items:center;flex:1;margin:0 12px">
+              <div class="pct-bar"><div class="pct-fill" style="width:100%;background:var(--yellow)"></div></div>
+              <span class="phase-pct" style="color:var(--yellow)">100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase">
+      <div class="phase-dot-col">
+        <div class="phase-dot now">🔥</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-header">
+          <span class="phase-num">Phase 02</span>
+          <span class="phase-title">Growth — Ekspansi & Engagement</span>
+          <span class="phase-badge now">▶ Aktif Sekarang</span>
+        </div>
+        <div class="phase-card">
+          <div class="phase-items">
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Roadmap & Whitepaper</strong> — dokumen resmi visi, misi, arsitektur teknis, dan tokenomics $ODP dipublikasikan</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Halaman Dedicated</strong> — roadmap.html dan whitepaper.html sebagai standalone pages dengan URL yang bisa dibagikan</span></div>
+            <div class="phase-item"><span class="item-icon">✅</span><span class="item-text"><strong>Orynth Integration</strong> — platform terdaftar di <a href="https://www.orynth.dev/" target="_blank" class="tag-link">Orynth.dev</a> sebagai Web3 AI agent resmi Indonesia</span></div>
+            <div class="phase-item"><span class="item-icon">🔄</span><span class="item-text"><strong>Orynth Verification</strong> — proses verifikasi platform agar mendapat badge verified di ekosistem Orynth</span></div>
+            <div class="phase-item"><span class="item-icon">🔄</span><span class="item-text"><strong>User Profiles</strong> — wallet-based profile dengan history posting, streak badge, dan onchain activity summary</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Telegram Bot Notifikasi</strong> — reminder otomatis via <a href="https://t.me/mooneth05" target="_blank" class="tag-link">@mooneth05</a> agar streak tidak putus — kirim alert jam 20.00 WIB setiap hari</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>2,500+ Active Members</strong> — target komunitas aktif dengan onboarding campaign di Twitter/X dan Farcaster</span></div>
+          </div>
+          <div class="phase-footer">
+            <span class="phase-date">Q1 2025 — In Progress</span>
+            <div style="display:flex;align-items:center;flex:1;margin:0 12px">
+              <div class="pct-bar"><div class="pct-fill" style="width:60%;background:var(--orange)"></div></div>
+              <span class="phase-pct" style="color:var(--orange)">60%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase">
+      <div class="phase-dot-col">
+        <div class="phase-dot soon">🌐</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-header">
+          <span class="phase-num">Phase 03</span>
+          <span class="phase-title">Protocol — Infrastruktur Onchain</span>
+          <span class="phase-badge soon">◎ Segera</span>
+        </div>
+        <div class="phase-card">
+          <div class="phase-items">
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Onchain Post Verification</strong> — setiap post diverifikasi via wallet signature di Base Network. Hash posting di-store onchain sebagai proof-of-activity</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Streak NFT Badge</strong> — NFT milestone untuk streak 7 hari, 30 hari, dan 100 hari. Di-mint gratis di Base, fully onchain metadata</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Farcaster Frames Integration</strong> — post langsung dari Warpcast dengan streak tracking terintegrasi, reply di Farcaster masuk ke feed ODP</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>DAO Governance (Snapshot)</strong> — voting topik prioritas, fitur baru, dan arah komunitas. Setiap holder $ODP punya hak suara proporsional</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Public API</strong> — developer bisa build di atas data OnchainDailyPosting. Endpoint untuk feed, leaderboard, dan streak data</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>AgentOrynth v2</strong> — upgrade AI agent dengan real-time onchain data, whale alert, dan DeFi signal khusus komunitas Indonesia</span></div>
+          </div>
+          <div class="phase-footer">
+            <span class="phase-date">Q2–Q3 2025 — Planned</span>
+            <div style="display:flex;align-items:center;flex:1;margin:0 12px">
+              <div class="pct-bar"><div class="pct-fill" style="width:0%;background:var(--cyan)"></div></div>
+              <span class="phase-pct" style="color:var(--cyan)">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase">
+      <div class="phase-dot-col">
+        <div class="phase-dot future">🚀</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-header">
+          <span class="phase-num">Phase 04</span>
+          <span class="phase-title">Ecosystem — Token & Incentives</span>
+          <span class="phase-badge future">◌ Vision</span>
+        </div>
+        <div class="phase-card">
+          <div class="phase-items">
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>$ODP Token Launch</strong> — utility token di-deploy di Base Network. Supply terbatas, distribusi berbasis kontribusi dan streak aktif</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Streak-to-Earn</strong> — reward $ODP otomatis setiap hari posting. 7 hari streak = 10 ODP/hari, 30 hari = 25 ODP/hari, 100 hari = 50 ODP/hari</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Builder Grants Program</strong> — alokasi 15% supply untuk hibah developer Indonesia yang build tools di atas protokol ODP</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>Cross-chain Identity</strong> — unified Web3 identity yang menggabungkan aktivitas di Base, Ethereum, Solana, dan Farcaster dalam satu profile</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>10,000+ Members</strong> — target komunitas Web3 terbesar dari Indonesia, dengan presence aktif di ekosistem global</span></div>
+            <div class="phase-item"><span class="item-icon">⬜</span><span class="item-text"><strong>ODP DAO Full Activation</strong> — governance penuh via token, treasury management, dan program grants dijalankan sepenuhnya oleh komunitas</span></div>
+          </div>
+          <div class="phase-footer">
+            <span class="phase-date">Q4 2025 — Vision</span>
+            <div style="display:flex;align-items:center;flex:1;margin:0 12px">
+              <div class="pct-bar"><div class="pct-fill" style="width:0%;background:var(--purple)"></div></div>
+              <span class="phase-pct" style="color:var(--purple)">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+  <!-- CTA -->
+  <div class="cta-block">
+    <div class="cta-title">Siap bergabung dalam perjalanan ini?</div>
+    <p class="cta-sub">Mulai streak kamu sekarang dan jadilah bagian dari komunitas builder Web3 Indonesia yang konsisten membangun setiap hari.</p>
+    <div class="cta-btns">
+      <a href="index.html" class="cta-btn primary">🔥 Mulai Posting Sekarang</a>
+      <a href="https://t.me/mooneth05" target="_blank" class="cta-btn ghost">✈️ Join Telegram</a>
+      <a href="whitepaper.html" class="cta-btn dark">📄 Baca Whitepaper →</a>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<footer>
+  <div class="wrapper fi">
+    <div class="fc">© 2025 OnchainDailyPosting · Built for ID Web3 Community</div>
+    <div class="fl">
+      <a href="index.html">Home</a>
+      <a href="https://t.me/mooneth05" target="_blank">Telegram</a>
+      <a href="https://farcaster.xyz/moooneth" target="_blank">Farcaster</a>
+      <a href="https://twitter.com/mooneth05" target="_blank">Twitter/X</a>
+      <a href="https://www.orynth.dev/" target="_blank">Orynth</a>
+      <a href="whitepaper.html">Whitepaper</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Animate progress bars on load
+document.addEventListener("DOMContentLoaded", function(){
+  setTimeout(function(){
+    document.querySelectorAll(".pct-fill").forEach(function(el){
+      var w = el.style.width;
+      el.style.width = "0%";
+      setTimeout(function(){ el.style.width = w; }, 100);
+    });
+  }, 300);
+});
+</script>
+</body>
+</html>
