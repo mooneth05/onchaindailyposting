@@ -6,54 +6,54 @@
 <title>Onchain Daily Posting</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  font-family:Arial, sans-serif;
+  margin:0;
+  font-family:Arial;
   background:#0a0a0f;
   color:white;
-  overflow-x:hidden;
 }
 
-/* BACKGROUND EFFECT */
-.bg{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle at 20% 30%, #ff3cac22, transparent),
-             radial-gradient(circle at 80% 70%, #3cf0e022, transparent);
-  z-index:0;
-  pointer-events:none;
-}
-
-/* CONTAINER */
 .wrapper{
   max-width:900px;
   margin:auto;
   padding:20px;
-  position:relative;
-  z-index:2;
 }
 
-/* HEADER */
-h1{
-  color:#f5e642;
+h1{color:#f5e642}
+
+/* NAV */
+nav{
+  display:flex;
+  gap:10px;
   margin-bottom:20px;
-  font-size:28px;
+}
+nav a{
+  color:#aaa;
+  text-decoration:none;
+}
+nav a:hover{color:white}
+
+/* SECTION */
+section{
+  margin-top:50px;
+}
+
+/* BUTTON */
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#f5e642;
+  font-weight:bold;
+  cursor:pointer;
 }
 
 /* COMPOSE */
 .compose{
   background:#111118;
-  border:1px solid #1e1e2e;
-  border-radius:14px;
   padding:15px;
-  margin-bottom:20px;
-  transition:0.2s;
-}
-
-.compose:focus-within{
-  border-color:#f5e642;
-  box-shadow:0 0 15px #f5e64222;
+  border-radius:10px;
+  margin-top:20px;
 }
 
 textarea{
@@ -62,147 +62,165 @@ textarea{
   background:none;
   border:none;
   color:white;
-  outline:none;
-  resize:none;
-}
-
-/* BUTTON */
-button{
-  margin-top:10px;
-  padding:10px 18px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(135deg,#ff6b35,#ff3cac);
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 5px 20px #ff3cac55;
 }
 
 /* POST */
 .post{
   background:#111118;
-  border:1px solid #1e1e2e;
-  border-radius:14px;
   padding:15px;
-  margin-bottom:12px;
-  animation:fade 0.4s ease;
-  transition:0.2s;
+  border-radius:10px;
+  margin-top:10px;
 }
 
-.post:hover{
-  transform:translateY(-3px);
-  border-color:#ffffff22;
+/* BADGE */
+.badge{
+  padding:10px;
+  background:#111118;
+  border-radius:10px;
+  margin:10px 0;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(15px)}
-  to{opacity:1}
-}
-
-/* FOOTER */
-.post-footer{
-  margin-top:12px;
-  display:flex;
-  gap:8px;
-}
-
-.reaction-btn{
-  padding:6px 12px;
-  border:1px solid #1e1e2e;
-  background:none;
-  color:#aaa;
-  border-radius:8px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.reaction-btn:hover{
-  color:#fff;
-  border-color:#fff;
-}
-
-.reaction-btn.active{
-  color:#ff6b35;
-  border-color:#ff6b35;
-}
-
-/* FLOAT ANIMATION */
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-3px)}
+/* ROADMAP */
+.roadmap-item{
+  background:#111118;
+  padding:15px;
+  margin-top:10px;
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-
 <div class="wrapper">
-  <h1>🚀 Onchain Daily Posting</h1>
+
+<h1>🚀 Onchain Daily Posting</h1>
+
+<nav>
+<a href="#feed">Feed</a>
+<a href="#about">About</a>
+<a href="#badge">Badge</a>
+<a href="#roadmap">Roadmap</a>
+</nav>
+
+<button onclick="login()">Login Google</button>
+<div id="user"></div>
+
+<!-- FEED -->
+<section id="feed">
+  <h2>Feed</h2>
 
   <div class="compose">
-    <textarea id="input" placeholder="Apa yang kamu pikirkan hari ini?"></textarea>
-    <button id="postBtn">Post</button>
+    <textarea id="input" placeholder="Post sesuatu..."></textarea>
+    <button onclick="postData()">Post</button>
   </div>
 
-  <div id="feed"></div>
+  <div id="feedList"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About</h2>
+  <p>
+    Onchain Daily Posting adalah platform komunitas Web3 untuk berbagi insight,
+    update onchain, dan membangun reputasi digital berbasis aktivitas harian.
+  </p>
+</section>
+
+<!-- BADGE -->
+<section id="badge">
+  <h2>Badge System</h2>
+
+  <div class="badge">🔥 Daily Poster</div>
+  <div class="badge">🚀 Early User</div>
+  <div class="badge">💎 Alpha Hunter</div>
+
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <h2>Roadmap</h2>
+
+  <div class="roadmap-item">✅ Phase 1: Launch Website</div>
+  <div class="roadmap-item">🚧 Phase 2: User System & Feed</div>
+  <div class="roadmap-item">🔜 Phase 3: Web3 Wallet Login</div>
+  <div class="roadmap-item">🔜 Phase 4: Mobile App (APK)</div>
+
+</section>
+
+<!-- TWITTER -->
+<section>
+  <h2>Follow Project</h2>
+  <a href="https://twitter.com" target="_blank">
+    Follow us on Twitter
+  </a>
+</section>
+
 </div>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-// AUTO SAVE LOCAL
-let posts = JSON.parse(localStorage.getItem("posts") || "[]");
-
-// LOAD POST
-posts.forEach(p => createPost(p));
-
-// POST BUTTON
-document.getElementById("postBtn").onclick = () => {
-  const input = document.getElementById("input");
-  const text = input.value.trim();
-
-  if(!text){
-    alert("Isi dulu postingannya!");
-    return;
-  }
-
-  posts.unshift(text);
-  localStorage.setItem("posts", JSON.stringify(posts));
-
-  createPost(text);
-  input.value="";
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  projectId: "ISI_PROJECT"
 };
 
-// CREATE POST
-function createPost(text){
-  const feed = document.getElementById("feed");
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-  const el = document.createElement("div");
-  el.className="post";
+// LOGIN
+function login(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider);
+}
 
-  el.innerHTML = `
-    <div>${text}</div>
-    <div class="post-footer">
-      <button class="reaction-btn">❤️</button>
-      <button class="reaction-btn">🔥</button>
-      <button class="reaction-btn">💬</button>
-    </div>
-  `;
+// USER
+auth.onAuthStateChanged(user=>{
+  if(user){
+    document.getElementById("user").innerText = "Login: " + user.displayName;
+    loadPosts();
+  }
+});
 
-  feed.prepend(el);
+// POST
+function postData(){
+  const text = document.getElementById("input").value;
+  if(!text) return alert("Isi dulu!");
 
-  el.querySelectorAll(".reaction-btn").forEach(btn=>{
-    btn.onclick=()=>{
-      btn.classList.toggle("active");
-      btn.style.animation="float 0.3s";
-      setTimeout(()=>btn.style.animation="",300);
-    };
+  db.collection("posts").add({
+    text:text,
+    created:Date.now()
+  });
+
+  document.getElementById("input").value="";
+}
+
+// LOAD
+function loadPosts(){
+  db.collection("posts")
+  .orderBy("created","desc")
+  .onSnapshot(snapshot=>{
+    const feed = document.getElementById("feedList");
+    feed.innerHTML="";
+
+    snapshot.forEach(doc=>{
+      const data = doc.data();
+
+      const el = document.createElement("div");
+      el.className="post";
+
+      el.innerHTML = `
+        <div>${data.text}</div>
+      `;
+
+      feed.appendChild(el);
+    });
   });
 }
 </script>
