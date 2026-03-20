@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Whitepaper — OnchainDailyPosting</title>
+<meta name="description" content="Whitepaper resmi OnchainDailyPosting v1.0 — visi, arsitektur teknis, tokenomics $ODP, dan governance DAO komunitas builder Indonesia."/>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--bg2:#0d0d18;--card:#0f0f1c;--card2:#141425;
+  --border:#1c1c30;--border2:#252540;
+  --yellow:#f0e040;--orange:#ff5c1a;--pink:#f02d7a;
+  --cyan:#00e5cc;--green:#39ff7e;--purple:#8855ff;--blue:#2d7aff;
+  --white:#eeeef8;--muted:#5a5a7a;--muted2:#8888aa;
+  --fd:'Syne',sans-serif;--fm:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--fd);overflow-x:hidden;min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
+
+/* BLOBS */
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.07}
+.b1{width:600px;height:600px;background:radial-gradient(circle,var(--yellow),transparent);top:-150px;right:-100px;animation:bf 16s ease-in-out infinite}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--purple),transparent);bottom:10%;left:-100px;animation:bf 20s ease-in-out infinite;animation-delay:-8s}
+.b3{width:350px;height:350px;background:radial-gradient(circle,var(--cyan),transparent);top:40%;right:20%;animation:bf 13s ease-in-out infinite;animation-delay:-4s}
+@keyframes bf{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(25px,20px) scale(1.04)}66%{transform:translate(-15px,12px) scale(.97)}}
+
+.wrapper{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:0 28px}
+
+/* HEADER */
+header{padding:18px 0;border-bottom:1px solid var(--border);background:rgba(8,8,16,.92);backdrop-filter:blur(24px);position:sticky;top:0;z-index:500}
+.hi{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:var(--yellow);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 0 18px rgba(240,224,64,.3);transition:transform .2s,box-shadow .2s}
+.logo:hover .logo-icon{transform:rotate(-5deg);box-shadow:0 0 28px rgba(240,224,64,.5)}
+.logo-text{font-size:1rem;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:var(--white)}
+.logo-text span{color:var(--yellow)}
+.logo-sub{font-size:.58rem;font-family:var(--fm);color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.nav-links{display:flex;gap:8px;align-items:center}
+.nav-links a{padding:7px 14px;border-radius:8px;font-size:.74rem;font-weight:700;text-decoration:none;color:var(--muted2);transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--white);background:var(--border)}
+.nav-links a.active{color:var(--bg);background:var(--yellow)}
+.back-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:9px;background:var(--card);border:1px solid var(--border);color:var(--muted2);font-size:.74rem;font-weight:700;text-decoration:none;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.back-btn:hover{border-color:var(--border2);color:var(--white)}
+
+/* HERO */
+.hero{padding:64px 0 52px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:rgba(240,224,64,.08);border:1px solid rgba(240,224,64,.2);border-radius:20px;font-size:.68rem;font-family:var(--fm);color:var(--yellow);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px}
+.hero-grid{display:grid;grid-template-columns:1fr 280px;gap:32px;align-items:start}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.6rem);font-weight:800;line-height:1.05;letter-spacing:-2.5px;margin-bottom:16px}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero-abstract{font-size:.9rem;color:var(--muted2);line-height:1.8;margin-bottom:0}
+.meta-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;position:sticky;top:90px}
+.meta-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);gap:10px}
+.meta-row:last-child{border-bottom:none;padding-bottom:0}
+.meta-key{font-size:.6rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:1px;flex-shrink:0}
+.meta-val{font-size:.78rem;font-weight:700;text-align:right}
+.meta-val a{text-decoration:none;transition:opacity .15s}
+.meta-val a:hover{opacity:.75}
+
+/* TOC */
+.toc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin:40px 0 36px}
+.toc-title{font-size:.65rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.toc-item{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;cursor:pointer;transition:all .15s;text-decoration:none;color:inherit}
+.toc-item:hover{background:rgba(255,255,255,.04)}
+.toc-item:hover .toc-nm{color:var(--cyan)}
+.toc-n{font-size:.6rem;font-family:var(--fm);color:var(--muted);width:24px;flex-shrink:0;background:var(--border);padding:3px 6px;border-radius:4px;text-align:center}
+.toc-nm{font-size:.8rem;font-weight:700;transition:color .15s}
+.toc-ico{font-size:.9rem;margin-left:auto}
+
+/* SECTIONS */
+.sections{display:flex;flex-direction:column;gap:24px;margin-bottom:80px}
+.sec{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:30px;animation:fadeUp .5s ease both;scroll-margin-top:100px}
+.sec:nth-child(1){animation-delay:.04s}.sec:nth-child(2){animation-delay:.09s}
+.sec:nth-child(3){animation-delay:.14s}.sec:nth-child(4){animation-delay:.19s}
+.sec:nth-child(5){animation-delay:.24s}.sec:nth-child(6){animation-delay:.29s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.sec-num{font-size:.6rem;font-family:var(--fm);color:var(--muted);background:var(--border);padding:4px 10px;border-radius:6px;letter-spacing:1px;flex-shrink:0}
+.sec-ico{font-size:1.4rem;flex-shrink:0}
+.sec-title{font-size:1.1rem;font-weight:800;letter-spacing:-.4px}
+
+.body{font-size:.88rem;color:var(--muted2);line-height:1.85}
+.body p{margin-bottom:16px}.body p:last-child{margin-bottom:0}
+.body strong{color:var(--white);font-weight:700}
+.body em{font-style:normal;color:var(--cyan)}
+.body a{color:var(--cyan);text-decoration:none;font-weight:600}
+.body a:hover{text-decoration:underline}
+.body h4{font-size:.82rem;font-weight:800;color:var(--white);margin:20px 0 10px;text-transform:uppercase;letter-spacing:1px;font-family:var(--fm)}
+
+/* PILLAR GRID */
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.pillar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s,transform .2s}
+.pillar:hover{border-color:var(--border2);transform:translateY(-2px)}
+.pillar-ic{font-size:1.5rem;margin-bottom:10px}
+.pillar-title{font-size:.86rem;font-weight:800;margin-bottom:7px;letter-spacing:-.2px;color:var(--white)}
+.pillar-desc{font-size:.75rem;color:var(--muted2);line-height:1.6}
+
+/* TOKEN GRID */
+.token-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.token-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;transition:transform .2s}
+.token-item:hover{transform:translateY(-2px)}
+.token-pct{font-size:1.5rem;font-weight:800;letter-spacing:-1px;margin-bottom:5px;line-height:1}
+.token-label{font-size:.6rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.token-desc{font-size:.7rem;color:var(--muted2);line-height:1.4}
+
+/* TECH GRID */
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.tech-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+.tech-item:hover{border-color:var(--border2)}
+.tech-ic{font-size:1.3rem;flex-shrink:0}
+.tech-nm{font-size:.82rem;font-weight:800;margin-bottom:3px;color:var(--white)}
+.tech-role{font-size:.65rem;color:var(--muted2);font-family:var(--fm);line-height:1.4}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* HIGHLIGHT BOX */
+.highlight-box{background:rgba(240,224,64,.05);border:1px solid rgba(240,224,64,.15);border-radius:12px;padding:16px 18px;margin:16px 0;font-size:.84rem;color:var(--muted2);line-height:1.7}
+.highlight-box strong{color:var(--yellow)}
+
+/* TOKENOMICS VISUAL */
+.token-visual{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;margin:16px 0}
+.token-bar-list{display:flex;flex-direction:column;gap:10px}
+.tbar-item{display:flex;align-items:center;gap:12px}
+.tbar-label{font-size:.72rem;font-weight:700;width:160px;flex-shrink:0}
+.tbar-track{flex:1;height:8px;background:var(--border);border-radius:8px;overflow:hidden}
+.tbar-fill{height:100%;border-radius:8px;transition:width 1s ease}
+.tbar-pct{font-size:.65rem;font-family:var(--fm);color:var(--muted);width:36px;text-align:right;flex-shrink:0}
+
+/* CTA */
+.cta-block{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;text-align:center;margin-bottom:80px;position:relative;overflow:hidden}
+.cta-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,224,64,.06),transparent 60%)}
+.cta-title{font-size:1.6rem;font-weight:800;letter-spacing:-1px;margin-bottom:10px}
+.cta-sub{font-size:.88rem;color:var(--muted2);line-height:1.7;margin-bottom:28px;max-width:440px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;text-decoration:none;font-weight:800;font-size:.82rem;transition:transform .15s,box-shadow .2s}
+.cta-btn.primary{background:var(--yellow);color:var(--bg)}
+.cta-btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(240,224,64,.35)}
+.cta-btn.tg{background:rgba(0,229,204,.08);border:1px solid rgba(0,229,204,.25);color:var(--cyan)}
+.cta-btn.tg:hover{transform:translateY(-2px);background:rgba(0,229,204,.15)}
+.cta-btn.orn{background:rgba(136,85,255,.08);border:1px solid rgba(136,85,255,.25);color:var(--purple)}
+.cta-btn.orn:hover{transform:translateY(-2px);background:rgba(136,85,255,.15)}
+.cta-btn.dark{background:rgba(255,255,255,.05);border:1px solid var(--border2);color:var(--muted2)}
+.cta-btn.dark:hover{color:var(--white);transform:translateY(-2px)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 0;background:var(--bg2)}
+.fi{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fc{font-size:.65rem;font-family:var(--fm);color:var(--muted)}
+.fl{display:flex;gap:16px;flex-wrap:wrap}
+.fl a{font-size:.65rem;font-family:var(--fm);color:var(--muted);text-decoration:none;transition:color .15s}
+.fl a:hover{color:var(--cyan)}
+
+@media(max-width:700px){
+  .hero-grid{grid-template-columns:1fr}
+  .meta-card{position:static}
+  .toc-grid{grid-template-columns:1fr}
+  .pillar-grid{grid-template-columns:1fr}
+  .token-grid{grid-template-columns:1fr 1fr}
+  .tech-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:480px){
+  .wrapper{padding:0 16px}
+  .hero{padding:44px 0 32px}
+  .hero h1{font-size:2rem;letter-spacing:-2px}
+  .token-grid{grid-template-columns:1fr 1fr}
+  .tbar-label{width:120px;font-size:.66rem}
+  .cta-btns{flex-direction:column;align-items:center}
+  .cta-btn{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<header>
+  <div class="wrapper hi">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">⛓️</div>
+      <div>
+        <div class="logo-text"><span>Onchain</span>DailyPosting</div>
+        <div class="logo-sub">Community Hub · ID</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Feed</a>
+      <a href="index.html#explore">Explore</a>
+      <a href="roadmap.html">Roadmap</a>
+      <a href="whitepaper.html" class="active">Whitepaper</a>
+    </div>
+    <a href="index.html" class="back-btn">← Kembali</a>
+  </div>
+</header>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">📄 Whitepaper v1.0</div>
+    <div class="hero-grid">
+      <div>
+        <h1>OnchainDailyPosting <em>Whitepaper</em></h1>
+        <p class="hero-abstract">Dokumen resmi yang menjelaskan visi, arsitektur teknis, model ekonomi token $ODP, dan sistem governance DAO komunitas builder Web3 Indonesia. Ditulis sebagai panduan transparansi untuk komunitas dan mitra ekosistem.</p>
+      </div>
+      <div class="meta-card">
+        <div class="meta-row"><span class="meta-key">Versi</span><span class="meta-val">v1.0 — 2025</span></div>
+        <div class="meta-row"><span class="meta-key">Chain Utama</span><span class="meta-val">Base Network</span></div>
+        <div class="meta-row"><span class="meta-key">Token</span><span class="meta-val" style="color:var(--yellow)">$ODP (TBD)</span></div>
+        <div class="meta-row"><span class="meta-key">Telegram</span><span class="meta-val"><a href="https://t.me/mooneth05" target="_blank" style="color:var(--cyan)">@mooneth05</a></span></div>
+        <div class="meta-row"><span class="meta-key">Farcaster</span><span class="meta-val"><a href="https://farcaster.xyz/moooneth" target="_blank" style="color:var(--purple)">/moooneth</a></span></div>
+        <div class="meta-row"><span class="meta-key">Twitter/X</span><span class="meta-val"><a href="https://twitter.com/mooneth05" target="_blank" style="color:var(--muted2)">@mooneth05</a></span></div>
+        <div class="meta-row"><span class="meta-key">Orynth</span><span class="meta-val"><a href="https://www.orynth.dev/" target="_blank" style="color:var(--pink)">orynth.dev</a></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Daftar Isi</div>
+    <div class="toc-grid">
+      <a href="#sec-1" class="toc-item"><span class="toc-n">01</span><span class="toc-nm">Masalah & Peluang</span><span class="toc-ico">🔍</span></a>
+      <a href="#sec-2" class="toc-item"><span class="toc-n">02</span><span class="toc-nm">Solusi — Platform ODP</span><span class="toc-ico">⚡</span></a>
+      <a href="#sec-3" class="toc-item"><span class="toc-n">03</span><span class="toc-nm">Arsitektur Teknis</span><span class="toc-ico">🏗️</span></a>
+      <a href="#sec-4" class="toc-item"><span class="toc-n">04</span><span class="toc-nm">Tokenomics $ODP</span><span class="toc-ico">💎</span></a>
+      <a href="#sec-5" class="toc-item"><span class="toc-n">05</span><span class="toc-nm">Governance & DAO</span><span class="toc-ico">🗳️</span></a>
+      <a href="#sec-6" class="toc-item"><span class="toc-n">06</span><span class="toc-nm">Visi & Misi</span><span class="toc-ico">🌏</span></a>
+    </div>
+  </div>
+
+  <!-- SECTIONS -->
+  <div class="sections">
+
+    <!-- 01 -->
+    <div class="sec" id="sec-1">
+      <div class="sec-hd">
+        <span class="sec-num">01</span>
+        <span class="sec-ico">🔍</span>
+        <span class="sec-title">Masalah & Peluang</span>
+      </div>
+      <div class="body">
+        <p>Indonesia memiliki komunitas kripto dan Web3 yang <strong>terbesar di Asia Tenggara</strong>, namun sebagian besar aktivitas onchain masih tersebar, tidak terorganisir, dan kurang terekspos ke ekosistem global. Builder lokal sering kali bekerja sendiri tanpa visibilitas dan dukungan komunitas yang terstruktur.</p>
+        <h4>Empat Masalah Utama</h4>
+        <div class="pillar-grid">
+          <div class="pillar"><div class="pillar-ic">😴</div><div class="pillar-title">Kurang Konsistensi</div><div class="pillar-desc">Sebagian besar builder aktif hanya saat market pump. Tidak ada sistem yang mendorong kebiasaan posting dan berkontribusi secara rutin.</div></div>
+          <div class="pillar"><div class="pillar-ic">🌫️</div><div class="pillar-title">Kurang Visibilitas</div><div class="pillar-desc">Kontribusi builder Indonesia tidak teragregasi di satu tempat, sehingga tidak terlihat dan tidak diakui oleh komunitas global.</div></div>
+          <div class="pillar"><div class="pillar-ic">🧩</div><div class="pillar-title">Fragmentasi Platform</div><div class="pillar-desc">Builder harus berpindah antara Twitter, Discord, Farcaster, dan berbagai chain tanpa koordinasi terpusat yang efisien.</div></div>
+          <div class="pillar"><div class="pillar-ic">💸</div><div class="pillar-title">Tanpa Insentif Nyata</div><div class="pillar-desc">Tidak ada reward terukur untuk konsistensi dan kontribusi aktif. Partisipasi tidak dihargai secara transparan dan berkelanjutan.</div></div>
+        </div>
+        <p>ODP melihat peluang besar: dengan <strong>270+ juta penduduk</strong>, penetrasi crypto Indonesia tertinggi di Asia Tenggara, dan generasi muda yang tech-savvy — infrastruktur komunitas yang tepat bisa melahirkan gelombang builder Web3 kelas dunia dari Indonesia.</p>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="sec" id="sec-2">
+      <div class="sec-hd">
+        <span class="sec-num">02</span>
+        <span class="sec-ico">⚡</span>
+        <span class="sec-title">Solusi — Platform ODP</span>
+      </div>
+      <div class="body">
+        <p>OnchainDailyPosting membangun <strong>community hub terpusat</strong> yang menggabungkan social feed, gamifikasi streak, live market data, dan panduan Web3 dalam satu platform ringan yang dapat diakses dari mobile maupun desktop tanpa biaya infrastruktur besar.</p>
+        <h4>Empat Pilar Utama</h4>
+        <div class="pillar-grid">
+          <div class="pillar"><div class="pillar-ic">📡</div><div class="pillar-title">Daily Feed</div><div class="pillar-desc">Aggregasi posting aktivitas onchain dari seluruh builder Indonesia, terfilter per chain (Base, ETH, SOL, ARB) dan topik secara real-time.</div></div>
+          <div class="pillar"><div class="pillar-ic">🔥</div><div class="pillar-title">Streak System</div><div class="pillar-desc">Gamifikasi konsistensi dengan leaderboard, badge NFT milestone, dan reward $ODP untuk builder yang posting setiap hari tanpa putus.</div></div>
+          <div class="pillar"><div class="pillar-ic">📊</div><div class="pillar-title">Live Market Data</div><div class="pillar-desc">Ticker harga crypto real-time via CoinGecko API — ETH, BTC, SOL, ARB, OP, UNI — langsung di platform tanpa harus keluar aplikasi.</div></div>
+          <div class="pillar"><div class="pillar-ic">🎓</div><div class="pillar-title">Learn Center</div><div class="pillar-desc">Panduan Web3 dari nol sampai advanced dalam Bahasa Indonesia — setup wallet, DeFi, smart contract, sampai Farcaster Frames.</div></div>
+        </div>
+        <div class="highlight-box">
+          <strong>Pendekatan Mobi
