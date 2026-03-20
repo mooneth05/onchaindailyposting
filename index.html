@@ -1,229 +1,1107 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onchain Daily Posting</title>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OnchainDailyPosting — Community Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0a0a0f;
-  color:white;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--bg2:#0d0d18;--card:#0f0f1c;--card2:#141425;
+  --border:#1c1c30;--border2:#252540;
+  --yellow:#f0e040;--yellow2:#ffe566;--orange:#ff5c1a;--pink:#f02d7a;
+  --cyan:#00e5cc;--green:#39ff7e;--purple:#8855ff;--blue:#2d7aff;
+  --white:#eeeef8;--muted:#5a5a7a;--muted2:#8888aa;
+  --fd:'Syne',sans-serif;--fm:'Space Mono',monospace;
 }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:var(--fd);overflow-x:hidden;min-height:100vh}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.35}
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(130px);opacity:.09}
+.b1{width:700px;height:700px;background:radial-gradient(circle,var(--pink),transparent);top:-200px;left:-150px;animation:bf 14s ease-in-out infinite}
+.b2{width:550px;height:550px;background:radial-gradient(circle,var(--cyan),transparent);top:25%;right:-150px;animation:bf 18s ease-in-out infinite;animation-delay:-6s}
+.b3{width:450px;height:450px;background:radial-gradient(circle,var(--yellow),transparent);bottom:-100px;left:35%;animation:bf 12s ease-in-out infinite;animation-delay:-3s}
+.b4{width:300px;height:300px;background:radial-gradient(circle,var(--purple),transparent);top:60%;left:10%;animation:bf 20s ease-in-out infinite;animation-delay:-9s}
+@keyframes bf{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,25px) scale(1.05)}66%{transform:translate(-20px,15px) scale(.97)}}
+.wrapper{position:relative;z-index:10;max-width:1240px;margin:0 auto;padding:0 28px}
+header{padding:16px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:500;background:rgba(8,8,16,.9);backdrop-filter:blur(24px)}
+.hi{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:14px;text-decoration:none;cursor:pointer;user-select:none}
+.logo-icon{width:42px;height:42px;background:var(--yellow);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 20px rgba(240,224,64,.3);transition:box-shadow .2s,transform .2s}
+.logo:hover .logo-icon{box-shadow:0 0 32px rgba(240,224,64,.5);transform:rotate(-5deg)}
+.logo-text{font-size:1.05rem;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:var(--white)}
+.logo-text span{color:var(--yellow)}
+.logo-sub{font-size:.6rem;font-family:var(--fm);color:var(--muted);letter-spacing:2.5px;text-transform:uppercase}
+nav{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{padding:7px 12px;border-radius:9px;font-size:.72rem;font-weight:700;text-decoration:none;color:var(--muted2);transition:all .2s;cursor:pointer;user-select:none;white-space:nowrap;flex-shrink:0}
+nav a:hover{color:var(--white);background:var(--border)}
+nav a.active{color:var(--bg);background:var(--yellow)}
+.hr{display:flex;align-items:center;gap:10px}
+.h-status{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--border2);border-radius:8px;font-size:.7rem;font-family:var(--fm);color:var(--muted2)}
+.sdot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:sp 2s ease-in-out infinite}
+@keyframes sp{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(57,255,126,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(57,255,126,0)}}
+.h-cta{padding:10px 22px;border-radius:10px;background:var(--yellow);color:var(--bg);font-weight:800;font-size:.8rem;border:none;cursor:pointer;font-family:var(--fd);transition:transform .15s,box-shadow .2s}
+.h-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(240,224,64,.35)}
+.hbg{display:none;flex-direction:column;gap:5px;background:none;border:1px solid var(--border2);border-radius:9px;padding:10px;cursor:pointer}
+.hbg span{display:block;width:18px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+.hbg.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hbg.open span:nth-child(2){opacity:0}
+.hbg.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+.mob-nav{display:none;position:fixed;top:75px;left:0;right:0;background:rgba(8,8,16,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:16px 28px;z-index:490;flex-direction:column;gap:6px}
+.mob-nav.open{display:flex}
+.mob-nav a{padding:12px 16px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.9rem;color:var(--muted2);transition:all .2s;cursor:pointer;user-select:none}
+.mob-nav a:hover{color:var(--white);background:var(--border2)}
+.mob-nav a.active{color:var(--bg);background:var(--yellow)}
+.ticker-bar{overflow:hidden;border-bottom:1px solid var(--border);padding:10px 0;background:var(--bg2);position:relative;z-index:10}
+.ticker-bar::before,.ticker-bar::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.ticker-bar::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
+.ticker-bar::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
+.ticker-track{display:flex;width:max-content;animation:ts 40s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes ts{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-set{display:flex}
+.ti{display:inline-flex;align-items:center;gap:7px;font-size:.7rem;font-family:var(--fm);color:var(--muted2);padding:0 24px;border-right:1px solid var(--border);white-space:nowrap}
+.ts{color:var(--white);font-weight:700}.tu{color:var(--green)}.td{color:var(--pink)}
+.hero{padding:72px 0 52px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(240,45,122,.1);border:1px solid rgba(240,45,122,.25);border-radius:20px;font-size:.68rem;font-family:var(--fm);color:var(--pink);letter-spacing:1px;text-transform:uppercase;margin-bottom:22px}
+.lp{width:7px;height:7px;background:var(--pink);border-radius:50%;animation:lp 1.4s ease-in-out infinite}
+@keyframes lp{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+.hero h1{font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:800;line-height:1.04;letter-spacing:-2.5px;margin-bottom:22px}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero h1 .outline{-webkit-text-stroke:2px var(--orange);color:transparent;display:block}
+.hero-desc{font-size:.95rem;color:var(--muted2);line-height:1.75;margin-bottom:34px;max-width:400px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-p{padding:14px 28px;background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-weight:800;font-size:.88rem;border:none;border-radius:12px;cursor:pointer;font-family:var(--fd);transition:transform .15s,box-shadow .2s}
+.btn-p:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(255,92,26,.4)}
+.btn-g{padding:14px 28px;background:transparent;color:var(--white);font-weight:700;font-size:.88rem;border:1px solid var(--border2);border-radius:12px;cursor:pointer;font-family:var(--fd);transition:border-color .2s,color .2s,background .2s}
+.btn-g:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,204,.05)}
+.stats-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.sc:hover{transform:translateY(-4px);border-color:var(--border2)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc:nth-child(1)::before{background:linear-gradient(90deg,var(--yellow),var(--orange))}
+.sc:nth-child(2)::before{background:linear-gradient(90deg,var(--pink),var(--purple))}
+.sc:nth-child(3)::before{background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.sc:nth-child(4)::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.sn{font-size:2rem;font-weight:800;letter-spacing:-1.5px;display:block;margin-bottom:4px;line-height:1}
+.sc:nth-child(1) .sn{color:var(--yellow)}.sc:nth-child(2) .sn{color:var(--pink)}.sc:nth-child(3) .sn{color:var(--cyan)}.sc:nth-child(4) .sn{color:var(--green)}
+.sl{font-size:.65rem;color:var(--muted);font-family:var(--fm);text-transform:uppercase;letter-spacing:1.5px}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.sec-title{font-size:1.25rem;font-weight:800;letter-spacing:-.5px}
+.sec-tag{font-size:.65rem;font-family:var(--fm);color:var(--muted);background:var(--card);border:1px solid var(--border);padding:5px 12px;border-radius:20px;letter-spacing:1px}
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:40px 0 80px}
+.ftabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.ftab{padding:8px 18px;border-radius:9px;border:1px solid var(--border);background:none;color:var(--muted2);font-size:.76rem;font-weight:700;font-family:var(--fd);cursor:pointer;transition:all .15s}
+.ftab:hover{color:var(--white);border-color:var(--border2);background:var(--card)}
+.ftab.active{background:var(--yellow);color:var(--bg);border-color:var(--yellow)}
+.compose{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:18px;transition:border-color .2s,box-shadow .2s}
+.compose:focus-within{border-color:rgba(240,224,64,.4);box-shadow:0 0 0 1px rgba(240,224,64,.1),0 4px 24px rgba(0,0,0,.4)}
+.c-av{width:40px;height:40px;background:linear-gradient(135deg,var(--orange),var(--pink));border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.c-r{flex:1;display:flex;flex-direction:column;gap:10px}
+.c-inp{width:100%;background:none;border:none;color:var(--white);font-family:var(--fd);font-size:.9rem;resize:none;outline:none;min-height:64px;line-height:1.6}
+.c-inp::placeholder{color:var(--muted)}
+.c-acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.c-tag{padding:5px 12px;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted2);font-size:.7rem;cursor:pointer;font-family:var(--fm);transition:all .15s}
+.c-tag:hover{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,204,.06)}
+.c-tag.sel{color:var(--cyan);border-color:var(--cyan);background:rgba(0,229,204,.1)}
+.c-chr{margin-left:auto;font-size:.65rem;font-family:var(--fm);color:var(--muted)}
+.c-chr.warn{color:var(--orange)}
+.c-sub{padding:8px 20px;background:var(--yellow);color:var(--bg);font-weight:800;font-size:.78rem;border:none;border-radius:9px;cursor:pointer;font-family:var(--fd);transition:transform .15s,box-shadow .15s}
+.c-sub:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(240,224,64,.35)}
+.c-sub:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.feed{display:flex;flex-direction:column;gap:14px}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s,box-shadow .2s;animation:fu .5s ease both}
+.pc:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 32px rgba(0,0,0,.4)}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.p-acc{position:absolute;top:0;left:0;width:3px;height:100%}
+.p-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.av{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.p-meta{flex:1;min-width:0}
+.p-auth{font-size:.88rem;font-weight:700;margin-bottom:2px}
+.p-time{font-size:.65rem;font-family:var(--fm);color:var(--muted)}
+.p-bdg{font-size:.6rem;font-family:var(--fm);padding:4px 10px;border-radius:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
+.p-body{font-size:.9rem;line-height:1.7;color:#c0c0dc;margin-bottom:14px}
+.p-body .tag{color:var(--cyan);font-weight:700;cursor:pointer}
+.p-body .tag:hover{text-decoration:underline}
+.p-body .mention{color:var(--pink);font-weight:700}
+.p-body .hi{color:var(--yellow);font-weight:700}
+.p-chain{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;font-size:.65rem;font-family:var(--fm);color:var(--muted2);margin-bottom:14px}
+.cdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.p-ft{display:flex;align-items:center;gap:6px;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap}
+.rxn{display:flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;color:var(--muted2);font-size:.73rem;font-weight:600;font-family:var(--fd);cursor:pointer;transition:all .15s}
+.rxn:hover{border-color:var(--yellow);color:var(--yellow);background:rgba(240,224,64,.06)}
+.rxn.liked{border-color:var(--orange);color:var(--orange);background:rgba(255,92,26,.08)}
+.shr{margin-left:auto;padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:transparent;color:var(--muted);font-size:.73rem;cursor:pointer;transition:all .15s;font-family:var(--fd);font-weight:600}
+.shr:hover{color:var(--cyan);border-color:var(--cyan)}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .ei{font-size:3rem;margin-bottom:12px}
+.empty p{font-family:var(--fm);font-size:.8rem}
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px}
+.sct{font-size:.7rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.str-list{display:flex;flex-direction:column;gap:10px}
+.str-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;transition:background .15s}
+.str-item:hover{background:rgba(255,255,255,.03)}
+.str-rk{width:22px;font-size:.68rem;font-family:var(--fm);color:var(--muted);text-align:center;flex-shrink:0}
+.str-rk.g{color:var(--yellow);font-weight:700}.str-rk.s{color:#aaa;font-weight:700}.str-rk.b{color:#cd7f32;font-weight:700}
+.str-av{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.str-info{flex:1;min-width:0}
+.str-nm{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.str-d{font-size:.62rem;font-family:var(--fm);color:var(--muted)}
+.str-f{font-size:.75rem;font-family:var(--fm);font-weight:700;flex-shrink:0}
+.topic-list{display:flex;flex-direction:column;gap:7px}
+.t2{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.025);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.t2:hover{background:rgba(255,255,255,.06);border-color:var(--border2);transform:translateX(3px)}
+.t-nm{font-size:.8rem;font-weight:700}
+.t-cnt{font-size:.62rem;font-family:var(--fm);color:var(--muted)}
+.t-bar{width:100%;height:2px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.t-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.ch-list{display:flex;flex-direction:column;gap:6px}
+.ch-item{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:9px;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.ch-item:hover{background:rgba(255,255,255,.04);border-color:var(--border)}
+.ch-item.active{background:rgba(240,224,64,.07);border-color:rgba(240,224,64,.25)}
+.ch-l{display:flex;align-items:center;gap:10px}
+.ch-logo{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.ch-nm{font-size:.8rem;font-weight:700}
+.ch-p{font-size:.62rem;font-family:var(--fm);color:var(--muted)}
+.links-list{display:flex;flex-direction:column;gap:8px}
+.ext-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--muted2);font-size:.8rem;font-weight:600;transition:all .15s;cursor:pointer}
+.ext-link:hover{border-color:var(--border2);color:var(--white);background:rgba(255,255,255,.03);transform:translateX(3px)}
+.page{display:none}.page.active{display:block}
+.ph{padding:48px 0 20px}
+.ph-ttl{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-2px;margin-bottom:12px}
+.ph-dsc{color:var(--muted2);font-size:.95rem;line-height:1.7;max-width:500px}
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px}
+.exp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;transition:transform .2s,border-color .2s;cursor:pointer}
+.exp-card:hover{transform:translateY(-3px);border-color:var(--border2)}
+.exp-ic{font-size:2rem;margin-bottom:12px}
+.exp-ttl{font-size:1rem;font-weight:800;margin-bottom:6px;letter-spacing:-.3px}
+.exp-dsc{font-size:.8rem;color:var(--muted2);line-height:1.6}
+.lb-tbl{width:100%;border-collapse:collapse;margin-top:20px}
+.lb-tbl th{text-align:left;padding:10px 14px;font-size:.65rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid var(--border)}
+.lb-tbl td{padding:12px 14px;font-size:.85rem;border-bottom:1px solid var(--border)}
+.lb-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.lb-s{font-family:var(--fm);font-size:.78rem;color:var(--orange);font-weight:700}
+.lb-c{font-size:.65rem;font-family:var(--fm);color:var(--muted)}
+.lrn-list{display:flex;flex-direction:column;gap:14px;margin-top:24px}
+.lrn-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 22px;display:flex;align-items:center;gap:18px;transition:all .2s;text-decoration:none;color:inherit}
+.lrn-card:hover{transform:translateX(5px);border-color:var(--border2)}
+.lrn-ic{font-size:1.8rem;flex-shrink:0}
+.lrn-ttl{font-size:.95rem;font-weight:800;margin-bottom:5px;letter-spacing:-.3px}
+.lrn-dsc{font-size:.78rem;color:var(--muted2);line-height:1.5}
+.lrn-tag{font-size:.6rem;font-family:var(--fm);padding:3px 9px;border-radius:6px;font-weight:700;text-transform:uppercase;margin-left:auto;flex-shrink:0}
+.spacer{height:80px}
+.toast{position:fixed;bottom:32px;right:32px;padding:14px 22px;background:var(--card2);border:1px solid var(--border2);border-radius:12px;font-size:.82rem;font-weight:700;color:var(--white);z-index:9000;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{border-color:rgba(57,255,126,.3)}
+footer{border-top:1px solid var(--border);padding:36px 0;background:var(--bg2)}
+.fi{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.fc{font-size:.68rem;font-family:var(--fm);color:var(--muted)}
+.fl{display:flex;gap:20px;flex-wrap:wrap}
+.fl a{font-size:.68rem;font-family:var(--fm);color:var(--muted);text-decoration:none;transition:color .15s;cursor:pointer}
+.fl a:hover{color:var(--cyan)}
+/* ── ROADMAP ── */
+.rm-intro{max-width:640px;margin-bottom:48px}
+.rm-intro p{color:var(--muted2);font-size:.95rem;line-height:1.75;margin-top:12px}
+.rm-timeline{position:relative;padding-left:0}
+.rm-timeline::before{content:'';position:absolute;left:19px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--yellow),var(--pink),var(--cyan),var(--purple));opacity:.3}
+.rm-phase{display:flex;gap:24px;margin-bottom:40px;animation:fu .5s ease both}
+.rm-phase:nth-child(1){animation-delay:.05s}.rm-phase:nth-child(2){animation-delay:.1s}
+.rm-phase:nth-child(3){animation-delay:.15s}.rm-phase:nth-child(4){animation-delay:.2s}
+.rm-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;padding-top:4px}
+.rm-dot{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;position:relative;z-index:1;border:2px solid var(--border2)}
+.rm-dot.done{background:var(--yellow);border-color:var(--yellow);box-shadow:0 0 20px rgba(240,224,64,.35)}
+.rm-dot.active{background:linear-gradient(135deg,var(--orange),var(--pink));border-color:var(--orange);box-shadow:0 0 20px rgba(255,92,26,.3);animation:rmPulse 2s ease-in-out infinite}
+.rm-dot.soon{background:var(--card2);border-color:var(--border2)}
+.rm-dot.future{background:var(--card);border-color:var(--border)}
+@keyframes rmPulse{0%,100%{box-shadow:0 0 20px rgba(255,92,26,.3)}50%{box-shadow:0 0 32px rgba(255,92,26,.6)}}
+.rm-body{flex:1}
+.rm-phase-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.rm-phase-num{font-size:.65rem;font-family:var(--fm);color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+.rm-phase-title{font-size:1.1rem;font-weight:800;letter-spacing:-.3px}
+.rm-status{font-size:.6rem;font-family:var(--fm);padding:4px 10px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.rm-status.done{background:rgba(240,224,64,.15);color:var(--yellow)}
+.rm-status.active{background:rgba(255,92,26,.15);color:var(--orange)}
+.rm-status.soon{background:rgba(0,229,204,.1);color:var(--cyan)}
+.rm-status.future{background:rgba(136,85,255,.1);color:var(--purple)}
+.rm-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.rm-items{display:flex;flex-direction:column;gap:10px}
+.rm-item{display:flex;align-items:flex-start;gap:10px;font-size:.85rem;color:#c0c0dc;line-height:1.5}
+.rm-check{font-size:.85rem;flex-shrink:0;margin-top:.05em}
+.rm-item strong{color:var(--white);font-weight:700}
+.rm-q{font-size:.62rem;font-family:var(--fm);color:var(--muted);margin-top:8px;letter-spacing:1px}
 
-.wrapper{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
+/* ── WHITEPAPER ── */
+.wp-hero{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;margin-bottom:48px}
+.wp-abstract{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px}
+.wp-abstract-label{font-size:.62rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.wp-abstract p{font-size:.9rem;color:var(--muted2);line-height:1.8}
+.wp-meta-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:16px}
+.wp-meta-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border);font-size:.8rem}
+.wp-meta-row:last-child{border-bottom:none;padding-bottom:0}
+.wp-meta-key{color:var(--muted);font-family:var(--fm);font-size:.65rem;text-transform:uppercase;letter-spacing:1px}
+.wp-meta-val{color:var(--white);font-weight:700;text-align:right}
+.wp-toc{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:32px}
+.wp-toc-title{font-size:.7rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.wp-toc-list{display:flex;flex-direction:column;gap:0}
+.wp-toc-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .15s}
+.wp-toc-item:last-child{border-bottom:none}
+.wp-toc-item:hover .wp-toc-nm{color:var(--cyan)}
+.wp-toc-n{font-size:.65rem;font-family:var(--fm);color:var(--muted);width:20px;flex-shrink:0}
+.wp-toc-nm{font-size:.82rem;font-weight:700;transition:color .15s}
+.wp-sections{display:flex;flex-direction:column;gap:28px}
+.wp-section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;animation:fu .5s ease both}
+.wp-section:nth-child(1){animation-delay:.05s}.wp-section:nth-child(2){animation-delay:.1s}
+.wp-section:nth-child(3){animation-delay:.15s}.wp-section:nth-child(4){animation-delay:.2s}
+.wp-section:nth-child(5){animation-delay:.25s}.wp-section:nth-child(6){animation-delay:.3s}
+.wp-sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.wp-sec-n{font-size:.65rem;font-family:var(--fm);color:var(--muted);background:var(--border);padding:4px 10px;border-radius:6px;letter-spacing:1px}
+.wp-sec-title{font-size:1.1rem;font-weight:800;letter-spacing:-.3px}
+.wp-sec-icon{font-size:1.3rem}
+.wp-body{font-size:.88rem;color:var(--muted2);line-height:1.85}
+.wp-body p{margin-bottom:14px}.wp-body p:last-child{margin-bottom:0}
+.wp-body strong{color:var(--white);font-weight:700}
+.wp-body em{font-style:normal;color:var(--cyan)}
+.wp-pillar-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.wp-pillar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:16px}
+.wp-pillar-icon{font-size:1.4rem;margin-bottom:8px}
+.wp-pillar-title{font-size:.85rem;font-weight:800;margin-bottom:6px;letter-spacing:-.2px}
+.wp-pillar-desc{font-size:.75rem;color:var(--muted2);line-height:1.6}
+.wp-token-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.wp-token-item{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.wp-token-pct{font-size:1.4rem;font-weight:800;letter-spacing:-1px;margin-bottom:4px}
+.wp-token-label{font-size:.65rem;font-family:var(--fm);color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.wp-chain-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.wp-chain-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px}
+.wp-chain-icon{font-size:1.3rem;flex-shrink:0}
+.wp-chain-nm{font-size:.82rem;font-weight:700}
+.wp-chain-role{font-size:.65rem;color:var(--muted2);font-family:var(--fm)}
+.wp-divider{height:1px;background:var(--border);margin:18px 0}
+
+@media(max-width:1100px){
+  nav a{padding:6px 10px;font-size:.68rem}
 }
-
-h1{color:#f5e642}
-
-/* NAV */
-nav{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:36px;padding:48px 0 36px}
+  .hero h1{font-size:clamp(2rem,8vw,3rem)}
+  .stats-strip{grid-template-columns:1fr 1fr}
+  .main-grid{grid-template-columns:1fr}
+  .sidebar{display:none}
+  nav{display:none}
+  .hbg{display:flex}
+  .h-status{display:none}
+  .exp-grid{grid-template-columns:1fr}
+  .wp-hero{grid-template-columns:1fr}
+  .wp-pillar-grid{grid-template-columns:1fr}
+  .wp-token-grid{grid-template-columns:1fr 1fr}
+  .wp-chain-grid{grid-template-columns:1fr}
 }
-nav a{
-  color:#aaa;
-  text-decoration:none;
-}
-nav a:hover{color:white}
-
-/* SECTION */
-section{
-  margin-top:50px;
-}
-
-/* BUTTON */
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  background:#f5e642;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-/* COMPOSE */
-.compose{
-  background:#111118;
-  padding:15px;
-  border-radius:10px;
-  margin-top:20px;
-}
-
-textarea{
-  width:100%;
-  height:80px;
-  background:none;
-  border:none;
-  color:white;
-}
-
-/* POST */
-.post{
-  background:#111118;
-  padding:15px;
-  border-radius:10px;
-  margin-top:10px;
-}
-
-/* BADGE */
-.badge{
-  padding:10px;
-  background:#111118;
-  border-radius:10px;
-  margin:10px 0;
-}
-
-/* ROADMAP */
-.roadmap-item{
-  background:#111118;
-  padding:15px;
-  margin-top:10px;
-  border-radius:10px;
+@media(max-width:480px){
+  .wrapper{padding:0 16px}
+  .hero{padding:36px 0 28px}
+  .hero-actions{flex-direction:column}
+  .btn-p,.btn-g{width:100%;text-align:center}
+  .ftab{padding:7px 12px;font-size:.7rem}
+  .toast{left:16px;right:16px;bottom:16px}
+  .wp-token-grid{grid-template-columns:1fr 1fr}
+  .rm-phase{gap:14px}
 }
 </style>
 </head>
-
 <body>
+
+<div class="bg-blobs">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="blob b3"></div><div class="blob b4"></div>
+</div>
+
+<header>
+  <div class="wrapper hi">
+    <div class="logo" id="logoBtn">
+      <div class="logo-icon">⛓️</div>
+      <div>
+        <div class="logo-text"><span>Onchain</span>DailyPosting</div>
+        <div class="logo-sub">Community Hub · ID</div>
+      </div>
+    </div>
+    <nav id="mainNav">
+      <a data-page="feed" class="active">Feed</a>
+      <a data-page="explore">Explore</a>
+      <a data-page="leaderboard">Leaderboard</a>
+      <a data-page="roadmap">Roadmap</a>
+      <a data-page="whitepaper">Whitepaper</a>
+      <a data-page="learn">Learn</a>
+    </nav>
+    <div class="hr">
+      <div class="h-status"><span class="sdot"></span><span id="liveCount">312 online</span></div>
+      <button class="hbg" id="hbgBtn"><span></span><span></span><span></span></button>
+      <button class="h-cta" id="postNowBtn">🔥 Post Sekarang</button>
+    </div>
+  </div>
+</header>
+
+<nav class="mob-nav" id="mobNav">
+  <a data-page="feed" class="active">Feed</a>
+  <a data-page="explore">Explore</a>
+  <a data-page="leaderboard">Leaderboard</a>
+  <a data-page="roadmap">Roadmap</a>
+  <a data-page="whitepaper">Whitepaper</a>
+  <a data-page="learn">Learn</a>
+</nav>
+
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <div class="ticker-set" id="tSet1"><span class="ti"><span style="color:var(--muted)">⟳ Memuat harga live...</span></span></div>
+    <div class="ticker-set" id="tSet2"></div>
+  </div>
+</div>
 
 <div class="wrapper">
 
-<h1>🚀 Onchain Daily Posting</h1>
-
-<nav>
-<a href="#feed">Feed</a>
-<a href="#about">About</a>
-<a href="#badge">Badge</a>
-<a href="#roadmap">Roadmap</a>
-</nav>
-
-<button onclick="login()">Login Google</button>
-<div id="user"></div>
-
-<!-- FEED -->
-<section id="feed">
-  <h2>Feed</h2>
-
-  <div class="compose">
-    <textarea id="input" placeholder="Post sesuatu..."></textarea>
-    <button onclick="postData()">Post</button>
+  <!-- FEED -->
+  <div class="page active" id="page-feed">
+    <div class="hero">
+      <div>
+        <div class="hero-badge"><span class="lp"></span> Live Community</div>
+        <h1>Post setiap hari,<br><em>build onchain,</em><br><span class="outline">grow together.</span></h1>
+        <p class="hero-desc">Komunitas builder & trader Indonesia yang konsisten posting aktivitas onchain setiap hari. Share alpha, track wallet, dan grow bersama.</p>
+        <div class="hero-actions">
+          <button class="btn-p" id="startPostBtn">🚀 Mulai Posting</button>
+          <button class="btn-g" id="exploreBtn">Explore Feed →</button>
+        </div>
+      </div>
+      <div class="stats-strip">
+        <div class="sc"><span class="sn">2.4K</span><span class="sl">Members</span></div>
+        <div class="sc"><span class="sn">18.7K</span><span class="sl">Total Posts</span></div>
+        <div class="sc"><span class="sn" id="todayCount">312</span><span class="sl">Today</span></div>
+        <div class="sc"><span class="sn">97%</span><span class="sl">Streak Rate</span></div>
+      </div>
+    </div>
+    <div class="main-grid">
+      <div>
+        <div class="compose" id="composeBox">
+          <div class="c-av">🔥</div>
+          <div class="c-r">
+            <textarea class="c-inp" id="cInput" placeholder="Share aktivitas onchain kamu hari ini... #onchaindailyposting" maxlength="280"></textarea>
+            <div class="c-acts">
+              <button class="c-tag" data-tag="#base">#base</button>
+              <button class="c-tag" data-tag="#eth">#eth</button>
+              <button class="c-tag" data-tag="#solana">#solana</button>
+              <button class="c-tag" data-tag="#defi">#defi</button>
+              <span class="c-chr" id="cChr">0/280</span>
+              <button class="c-sub" id="cSub" disabled>Post ⚡</button>
+            </div>
+          </div>
+        </div>
+        <div class="ftabs" id="filterTabs">
+          <button class="ftab active" data-filter="all">Terbaru</button>
+          <button class="ftab" data-filter="trending">🔥 Trending</button>
+          <button class="ftab" data-filter="Base">⬟ Base</button>
+          <button class="ftab" data-filter="Ethereum">Ξ Ethereum</button>
+          <button class="ftab" data-filter="Solana">◎ Solana</button>
+        </div>
+        <div class="sec-head">
+          <div class="sec-title">Daily Feed</div>
+          <div class="sec-tag" id="feedCount">5 posts</div>
+        </div>
+        <div class="feed" id="feed"></div>
+      </div>
+      <div class="sidebar">
+        <div class="side-card">
+          <div class="sct">🔥 Top Streakers</div>
+          <div class="str-list" id="strList"></div>
+        </div>
+        <div class="side-card">
+          <div class="sct">📈 Trending Topics</div>
+          <div class="topic-list" id="topicList"></div>
+        </div>
+        <div class="side-card">
+          <div class="sct">⛓️ By Chain</div>
+          <div class="ch-list" id="chList"></div>
+        </div>
+        <div class="side-card">
+          <div class="sct">🔗 Community</div>
+          <div class="links-list">
+            <a href="https://t.me/mooneth05" target="_blank" class="ext-link">✈️ Telegram — @mooneth05</a>
+            <a href="https://farcaster.xyz/moooneth" target="_blank" class="ext-link">🟣 Farcaster — /moooneth</a>
+            <a href="https://twitter.com/mooneth05" target="_blank" class="ext-link">𝕏 Twitter — @mooneth05</a>
+            <a href="https://www.orynth.dev/" target="_blank" class="ext-link">🔮 Orynth Platform</a>
+            <a class="ext-link" id="roadmapSideLink">🗺️ Roadmap</a>
+            <a class="ext-link" id="wpSideLink">📄 Whitepaper</a>
+            <a class="ext-link" id="learnSideLink">📖 Panduan Web3</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="feedList"></div>
-</section>
+  <!-- EXPLORE -->
+  <div class="page" id="page-explore">
+    <div class="ph">
+      <div class="hero-badge" style="margin-bottom:14px"><span class="lp"></span> Explore</div>
+      <div class="ph-ttl">Jelajahi <em style="color:var(--cyan);font-style:normal">Ekosistem</em></div>
+      <p class="ph-dsc">Temukan tools, resources, dan komunitas Web3 terbaik untuk builder Indonesia.</p>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card" data-goto="feed"><div class="exp-ic">📡</div><div class="exp-ttl">Daily Feed</div><div class="exp-dsc">Lihat semua aktivitas onchain komunitas secara real-time. Filter berdasarkan chain, topik, atau waktu.</div></div>
+      <div class="exp-card" data-goto="leaderboard"><div class="exp-ic">🏆</div><div class="exp-ttl">Streak Leaderboard</div><div class="exp-dsc">Siapa yang paling konsisten? Lihat ranking builder dengan streak posting terpanjang.</div></div>
+      <div class="exp-card" data-goto="roadmap"><div class="exp-ic">🗺️</div><div class="exp-ttl">Roadmap</div><div class="exp-dsc">Perjalanan OnchainDailyPosting dari genesis sampai ekosistem token penuh. Phase 2 sedang aktif berjalan.</div></div>
+      <div class="exp-card" data-goto="whitepaper"><div class="exp-ic">📄</div><div class="exp-ttl">Whitepaper</div><div class="exp-dsc">Visi, arsitektur teknis, tokenomics $ODP, dan rencana governance DAO komunitas builder Indonesia.</div></div>
+      <div class="exp-card" data-href="https://www.orynth.dev/"><div class="exp-ic">🔮</div><div class="exp-ttl">Orynth Platform</div><div class="exp-dsc">Platform Web3 AI agent resmi tempat OnchainDailyPosting terdaftar. Temukan agent dan tools Web3 terpercaya.</div></div>
+      <div class="exp-card" data-href="https://basescan.org"><div class="exp-ic">🔵</div><div class="exp-ttl">Base Network</div><div class="exp-dsc">Explorer Base chain — track transaksi, smart contract, dan aktivitas onchain terbaru di L2 favorit Indonesia.</div></div>
+      <div class="exp-card" data-href="https://dune.com"><div class="exp-ic">📊</div><div class="exp-ttl">Onchain Analytics</div><div class="exp-dsc">Data dan analytics onchain via Dune. Buat dashboard custom untuk track komunitas dan portofolio kamu.</div></div>
+      <div class="exp-card" data-href="https://app.uniswap.org"><div class="exp-ic">🦄</div><div class="exp-ttl">Uniswap</div><div class="exp-dsc">DEX terbesar di DeFi. Swap token, provide liquidity, dan earn fee dari trading activity komunitas.</div></div>
+      <div class="exp-card" data-goto="learn"><div class="exp-ic">🎓</div><div class="exp-ttl">Learn Web3</div><div class="exp-dsc">Mulai dari nol atau tingkatkan skill. Panduan lengkap dari wallet setup sampai DeFi yield strategies.</div></div>
+    </div>
+    <div class="spacer"></div>
+  </div>
 
-<!-- ABOUT -->
-<section id="about">
-  <h2>About</h2>
-  <p>
-    Onchain Daily Posting adalah platform komunitas Web3 untuk berbagi insight,
-    update onchain, dan membangun reputasi digital berbasis aktivitas harian.
-  </p>
-</section>
+  <!-- LEADERBOARD -->
+  <div class="page" id="page-leaderboard">
+    <div class="ph">
+      <div class="hero-badge" style="margin-bottom:14px">🏆 Leaderboard</div>
+      <div class="ph-ttl">Top <em style="color:var(--yellow);font-style:normal">Streakers</em></div>
+      <p class="ph-dsc">Builder yang paling konsisten posting onchain setiap hari.</p>
+    </div>
+    <div class="side-card" style="margin-bottom:24px">
+      <table class="lb-tbl">
+        <thead><tr><th>#</th><th>Builder</th><th>Streak</th><th>Chain Favorit</th><th>Total Posts</th></tr></thead>
+        <tbody id="lbBody"></tbody>
+      </table>
+    </div>
+    <div class="spacer"></div>
+  </div>
 
-<!-- BADGE -->
-<section id="badge">
-  <h2>Badge System</h2>
+  <!-- LEARN -->
+  <div class="page" id="page-learn">
+    <div class="ph">
+      <div class="hero-badge" style="margin-bottom:14px">📖 Learn Web3</div>
+      <div class="ph-ttl">Panduan <em style="color:var(--green);font-style:normal">Builder</em></div>
+      <p class="ph-dsc">Resource belajar Web3 dalam Bahasa Indonesia. Cocok untuk pemula sampai advanced.</p>
+    </div>
+    <div class="lrn-list">
+      <a href="https://metamask.io/learn/" target="_blank" class="lrn-card"><div class="lrn-ic">🦊</div><div><div class="lrn-ttl">Setup Wallet Pertama</div><div class="lrn-dsc">Panduan lengkap setup MetaMask, import wallet, dan keamanan seed phrase.</div></div><span class="lrn-tag" style="background:rgba(57,255,126,.15);color:var(--green)">Pemula</span></a>
+      <a href="https://base.org/learn" target="_blank" class="lrn-card"><div class="lrn-ic">🔵</div><div><div class="lrn-ttl">Mengenal Base Network</div><div class="lrn-dsc">L2 Ethereum dari Coinbase. Gas fee murah, ekosistem growing. Cara bridge ETH ke Base.</div></div><span class="lrn-tag" style="background:rgba(0,229,204,.15);color:var(--cyan)">Menengah</span></a>
+      <a href="https://app.uniswap.org" target="_blank" class="lrn-card"><div class="lrn-ic">🔄</div><div><div class="lrn-ttl">DeFi: Swap & Liquidity</div><div class="lrn-dsc">Cara swap token di DEX, provide liquidity di Uniswap V3/V4, dan memahami impermanent loss.</div></div><span class="lrn-tag" style="background:rgba(255,92,26,.15);color:var(--orange)">Menengah</span></a>
+      <a href="https://dune.com" target="_blank" class="lrn-card"><div class="lrn-ic">📊</div><div><div class="lrn-ttl">Onchain Analytics dengan Dune</div><div class="lrn-dsc">Buat dashboard onchain sendiri dengan SQL. Track whale wallet dan monitor protokol.</div></div><span class="lrn-tag" style="background:rgba(136,85,255,.15);color:var(--purple)">Advanced</span></a>
+      <a href="https://soliditylang.org" target="_blank" class="lrn-card"><div class="lrn-ic">⚙️</div><div><div class="lrn-ttl">Deploy Smart Contract Pertama</div><div class="lrn-dsc">Belajar Solidity dari dasar, deploy ERC-20 & ERC-721 di testnet, dan verify di Basescan.</div></div><span class="lrn-tag" style="background:rgba(240,45,122,.15);color:var(--pink)">Advanced</span></a>
+      <a href="https://farcaster.xyz" target="_blank" class="lrn-card"><div class="lrn-ic">🟣</div><div><div class="lrn-ttl">Farcaster & Web3 Social</div><div class="lrn-dsc">Bergabung di Farcaster, buat Frames, dan bangun presence di social media yang onchain.</div></div><span class="lrn-tag" style="background:rgba(240,224,64,.15);color:var(--yellow)">Semua Level</span></a>
+    </div>
+    <div class="spacer"></div>
+  </div>
 
-  <div class="badge">🔥 Daily Poster</div>
-  <div class="badge">🚀 Early User</div>
-  <div class="badge">💎 Alpha Hunter</div>
+  <!-- ROADMAP -->
+  <div class="page" id="page-roadmap">
+    <div class="ph">
+      <div class="hero-badge" style="margin-bottom:14px"><span class="lp"></span> Roadmap</div>
+      <div class="rm-intro">
+        <div class="ph-ttl">Perjalanan <em style="color:var(--orange);font-style:normal">OnchainDailyPosting</em></div>
+        <p>Dari komunitas Discord sederhana menjadi ekosistem Web3 terbesar untuk builder Indonesia. Setiap fase dibangun bersama komunitas — transparan, onchain, dan berkelanjutan.</p>
+      </div>
+    </div>
 
-</section>
+    <div class="rm-timeline">
 
-<!-- ROADMAP -->
-<section id="roadmap">
-  <h2>Roadmap</h2>
+      <!-- Phase 1 -->
+      <div class="rm-phase">
+        <div class="rm-dot-wrap">
+          <div class="rm-dot done">✅</div>
+        </div>
+        <div class="rm-body">
+          <div class="rm-phase-hd">
+            <span class="rm-phase-num">Phase 01</span>
+            <span class="rm-phase-title">Genesis — Fondasi Komunitas</span>
+            <span class="rm-status done">✓ Selesai</span>
+          </div>
+          <div class="rm-card">
+            <div class="rm-items">
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Launch OnchainDailyPosting</strong> — platform pertama komunitas posting aktivitas onchain harian di Indonesia</span></div>
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Daily Feed System</strong> — sistem posting dengan filter chain, trending topics, dan streak tracking</span></div>
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Streak Leaderboard</strong> — gamifikasi konsistensi posting dengan ranking real-time</span></div>
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Multi-chain Support</strong> — Base, Ethereum, Solana, Arbitrum, Polygon dalam satu hub</span></div>
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Community Links</strong> — Telegram <strong>@mooneth05</strong> dan Farcaster <strong>/moooneth</strong> aktif</span></div>
+            </div>
+            <div class="rm-q">Q4 2024 — Completed</div>
+          </div>
+        </div>
+      </div>
 
-  <div class="roadmap-item">✅ Phase 1: Launch Website</div>
-  <div class="roadmap-item">🚧 Phase 2: User System & Feed</div>
-  <div class="roadmap-item">🔜 Phase 3: Web3 Wallet Login</div>
-  <div class="roadmap-item">🔜 Phase 4: Mobile App (APK)</div>
+      <!-- Phase 2 -->
+      <div class="rm-phase">
+        <div class="rm-dot-wrap">
+          <div class="rm-dot active">🔥</div>
+        </div>
+        <div class="rm-body">
+          <div class="rm-phase-hd">
+            <span class="rm-phase-num">Phase 02</span>
+            <span class="rm-phase-title">Growth — Ekspansi & Engagement</span>
+            <span class="rm-status active">▶ Aktif</span>
+          </div>
+          <div class="rm-card">
+            <div class="rm-items">
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Live Crypto Ticker</strong> — harga real-time via CoinGecko API langsung di platform</span></div>
+              <div class="rm-item"><span class="rm-check">✅</span><span><strong>Web3 Learn Center</strong> — panduan onboarding Web3 dalam Bahasa Indonesia</span></div>
+              <div class="rm-item"><span class="rm-check">🔄</span><span><strong>Onchain Submission ke Orynth</strong> — verifikasi platform sebagai agent Web3 resmi</span></div>
+              <div class="rm-item"><span class="rm-check">🔄</span><span><strong>User Profiles</strong> — wallet-based profile dengan history posting dan streak badge</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Notifikasi Streak</strong> — reminder otomatis via Telegram bot agar streak tidak putus</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>2,500+ Active Members</strong> — target komunitas aktif Q1 2025</span></div>
+            </div>
+            <div class="rm-q">Q1 2025 — In Progress</div>
+          </div>
+        </div>
+      </div>
 
-</section>
+      <!-- Phase 3 -->
+      <div class="rm-phase">
+        <div class="rm-dot-wrap">
+          <div class="rm-dot soon">🌐</div>
+        </div>
+        <div class="rm-body">
+          <div class="rm-phase-hd">
+            <span class="rm-phase-num">Phase 03</span>
+            <span class="rm-phase-title">Protocol — Infrastruktur Onchain</span>
+            <span class="rm-status soon">◎ Segera</span>
+          </div>
+          <div class="rm-card">
+            <div class="rm-items">
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Onchain Post Verification</strong> — setiap post diverifikasi via wallet signature di Base Network</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Streak NFT Badge</strong> — NFT milestone untuk streak 7, 30, 100 hari — di-mint gratis di Base</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>DAO Governance</strong> — voting topik, fitur baru, dan arah komunitas menggunakan token snapshot</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>API Publik</strong> — developer bisa build di atas data OnchainDailyPosting</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Farcaster Frames Integration</strong> — post langsung dari Warpcast dengan streak tracking terintegrasi</span></div>
+            </div>
+            <div class="rm-q">Q2–Q3 2025 — Planned</div>
+          </div>
+        </div>
+      </div>
 
-<!-- TWITTER -->
-<section>
-  <h2>Follow Project</h2>
-  <a href="https://twitter.com" target="_blank">
-    Follow us on Twitter
-  </a>
-</section>
+      <!-- Phase 4 -->
+      <div class="rm-phase">
+        <div class="rm-dot-wrap">
+          <div class="rm-dot future">🚀</div>
+        </div>
+        <div class="rm-body">
+          <div class="rm-phase-hd">
+            <span class="rm-phase-num">Phase 04</span>
+            <span class="rm-phase-title">Ecosystem — Token & Incentives</span>
+            <span class="rm-status future">◌ Roadmap</span>
+          </div>
+          <div class="rm-card">
+            <div class="rm-items">
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>$ODP Token</strong> — utility token untuk reward konsistensi posting dan governance ekosistem</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Streak-to-Earn</strong> — reward token otomatis untuk builder dengan streak 30+ hari berturut-turut</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Builder Grants</strong> — program hibah untuk developer Indonesia yang build di atas protokol ODP</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>Cross-chain Identity</strong> — unified Web3 identity lintas Base, Ethereum, Solana, dan Farcaster</span></div>
+              <div class="rm-item"><span class="rm-check">⬜</span><span><strong>10,000+ Members</strong> — komunitas Web3 terbesar dari Indonesia, go global</span></div>
+            </div>
+            <div class="rm-q">Q4 2025 — Vision</div>
+          </div>
+        </div>
+      </div>
 
-</div>
+    </div><!-- /rm-timeline -->
+    <div class="spacer"></div>
+  </div><!-- /page-roadmap -->
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- WHITEPAPER -->
+  <div class="page" id="page-whitepaper">
+    <div class="ph">
+      <div class="hero-badge" style="margin-bottom:14px">📄 Whitepaper</div>
+      <div class="ph-ttl">OnchainDailyPosting <em style="color:var(--yellow);font-style:normal">v1.0</em></div>
+      <p class="ph-dsc">Dokumen resmi visi, misi, arsitektur, dan tokenomics komunitas onchain builder Indonesia.</p>
+    </div>
+
+    <div class="wp-hero">
+      <div class="wp-abstract">
+        <div class="wp-abstract-label">Abstract</div>
+        <p>OnchainDailyPosting (ODP) adalah protokol komunitas berbasis konsistensi yang membangun kebiasaan posting aktivitas onchain setiap hari di kalangan builder dan trader Indonesia. Platform ini menggabungkan social layer, gamifikasi streak, dan infrastruktur onchain untuk menciptakan ekosistem yang transparan, terdesentralisasi, dan berkelanjutan.</p>
+        <p style="margin-top:12px">Dengan memanfaatkan Base Network sebagai chain utama dan mengintegrasikan Farcaster sebagai social layer Web3, ODP bertujuan menjadi standar baru bagi komunitas builder Indonesia dalam berkontribusi dan bertumbuh bersama di era onchain economy.</p>
+      </div>
+      <div class="wp-meta-card">
+        <div class="wp-meta-row"><span class="wp-meta-key">Dokumen</span><span class="wp-meta-val">Whitepaper v1.0</span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Tanggal</span><span class="wp-meta-val">Q1 2025</span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Chain Utama</span><span class="wp-meta-val">Base Network</span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Token</span><span class="wp-meta-val">$ODP (TBD)</span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Telegram</span><span class="wp-meta-val"><a href="https://t.me/mooneth05" target="_blank" style="color:var(--cyan);text-decoration:none">@mooneth05</a></span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Farcaster</span><span class="wp-meta-val"><a href="https://farcaster.xyz/moooneth" target="_blank" style="color:var(--purple);text-decoration:none">/moooneth</a></span></div>
+        <div class="wp-meta-row"><span class="wp-meta-key">Twitter/X</span><span class="wp-meta-val"><a href="https://twitter.com/mooneth05" target="_blank" style="color:var(--muted2);text-decoration:none">@mooneth05</a></span></div>
+      </div>
+    </div>
+
+    <div class="wp-toc">
+      <div class="wp-toc-title">Daftar Isi</div>
+      <div class="wp-toc-list">
+        <div class="wp-toc-item"><span class="wp-toc-n">01</span><span class="wp-toc-nm">Masalah & Peluang</span></div>
+        <div class="wp-toc-item"><span class="wp-toc-n">02</span><span class="wp-toc-nm">Solusi — Platform ODP</span></div>
+        <div class="wp-toc-item"><span class="wp-toc-n">03</span><span class="wp-toc-nm">Arsitektur Teknis</span></div>
+        <div class="wp-toc-item"><span class="wp-toc-n">04</span><span class="wp-toc-nm">Tokenomics $ODP</span></div>
+        <div class="wp-toc-item"><span class="wp-toc-n">05</span><span class="wp-toc-nm">Governance & DAO</span></div>
+        <div class="wp-toc-item"><span class="wp-toc-n">06</span><span class="wp-toc-nm">Visi & Misi</span></div>
+      </div>
+    </div>
+
+    <div class="wp-sections">
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">01</span><span class="wp-sec-icon">🔍</span><span class="wp-sec-title">Masalah & Peluang</span></div>
+        <div class="wp-body">
+          <p>Indonesia memiliki komunitas kripto dan Web3 yang <strong>terbesar di Asia Tenggara</strong>, namun sebagian besar aktivitas onchain masih tersebar, tidak terorganisir, dan kurang terekspos ke ekosistem global. Builder lokal sering kali bekerja sendiri tanpa visibilitas dan dukungan komunitas yang terstruktur.</p>
+          <p>Tiga masalah utama yang ODP coba selesaikan:</p>
+          <div class="wp-pillar-grid">
+            <div class="wp-pillar"><div class="wp-pillar-icon">😴</div><div class="wp-pillar-title">Kurang Konsistensi</div><div class="wp-pillar-desc">Sebagian besar builder aktif hanya saat market pump. Tidak ada sistem yang mendorong kebiasaan posting rutin.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">🌫️</div><div class="wp-pillar-title">Kurang Visibilitas</div><div class="wp-pillar-desc">Kontribusi builder Indonesia tidak teragregasi di satu tempat, sehingga tidak terlihat oleh komunitas global.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">🧩</div><div class="wp-pillar-title">Fragmentasi Tool</div><div class="wp-pillar-desc">Builder harus berpindah antara Twitter, Discord, Farcaster, dan berbagai chain tanpa koordinasi terpusat.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">💸</div><div class="wp-pillar-title">Tanpa Insentif</div><div class="wp-pillar-desc">Tidak ada reward nyata untuk konsistensi dan kontribusi aktif. Partisipasi tidak terukur dan tidak diapresiasi.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">02</span><span class="wp-sec-icon">⚡</span><span class="wp-sec-title">Solusi — Platform ODP</span></div>
+        <div class="wp-body">
+          <p>OnchainDailyPosting membangun <strong>community hub terpusat</strong> yang menggabungkan social feed, gamifikasi streak, dan infrastruktur onchain dalam satu platform yang dapat diakses dari mobile maupun desktop.</p>
+          <p>Empat pilar utama platform ODP:</p>
+          <div class="wp-pillar-grid">
+            <div class="wp-pillar"><div class="wp-pillar-icon">📡</div><div class="wp-pillar-title">Daily Feed</div><div class="wp-pillar-desc">Aggregasi posting aktivitas onchain dari seluruh builder Indonesia, terfilter per chain dan topik.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">🔥</div><div class="wp-pillar-title">Streak System</div><div class="wp-pillar-desc">Gamifikasi konsistensi dengan leaderboard, badge NFT, dan reward untuk builder yang posting setiap hari.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">🎓</div><div class="wp-pillar-title">Learn Center</div><div class="wp-pillar-desc">Panduan Web3 dari nol sampai advanced dalam Bahasa Indonesia untuk onboarding builder baru.</div></div>
+            <div class="wp-pillar"><div class="wp-pillar-icon">🤖</div><div class="wp-pillar-title">AI Agent</div><div class="wp-pillar-desc">AgentOrynth — AI Web3 assistant yang membantu analisis market, DeFi research, dan onchain activity.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">03</span><span class="wp-sec-icon">🏗️</span><span class="wp-sec-title">Arsitektur Teknis</span></div>
+        <div class="wp-body">
+          <p>ODP dibangun sebagai <strong>static-first web application</strong> yang di-deploy di GitHub Pages, memastikan ketersediaan tinggi tanpa biaya infrastruktur yang mahal. Seluruh kode bersifat open source dan dapat di-fork oleh komunitas.</p>
+          <div class="wp-divider"></div>
+          <p><strong>Stack Teknologi:</strong></p>
+          <div class="wp-chain-grid">
+            <div class="wp-chain-card"><div class="wp-chain-icon">🔵</div><div><div class="wp-chain-nm">Base Network</div><div class="wp-chain-role">Chain utama · Post verification & NFT mint</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">🟣</div><div><div class="wp-chain-nm">Farcaster Protocol</div><div class="wp-chain-role">Social layer · Frames & channel /moooneth</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">📊</div><div><div class="wp-chain-nm">CoinGecko API</div><div class="wp-chain-role">Live price data · Ticker real-time</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">🤖</div><div><div class="wp-chain-nm">Claude API</div><div class="wp-chain-role">AI agent · AgentOrynth Web3 assistant</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">📦</div><div><div class="wp-chain-nm">GitHub Pages</div><div class="wp-chain-role">Hosting · Zero-cost deployment</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">🌐</div><div><div class="wp-chain-nm">Hostinger DNS</div><div class="wp-chain-role">Custom domain · SSL &amp; CDN</div></div></div>
+            <div class="wp-chain-card"><div class="wp-chain-icon">🔮</div><div><div class="wp-chain-nm"><a href="https://www.orynth.dev/" target="_blank" style="color:var(--cyan);text-decoration:none">Orynth Platform</a></div><div class="wp-chain-role">Agent registry · Web3 AI marketplace</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">04</span><span class="wp-sec-icon">💎</span><span class="wp-sec-title">Tokenomics $ODP</span></div>
+        <div class="wp-body">
+          <p>Token <strong>$ODP</strong> adalah utility token yang digunakan untuk reward konsistensi, governance komunitas, dan akses fitur premium. Token akan di-launch di <em>Base Network</em> setelah komunitas mencapai 5,000+ active members.</p>
+          <div class="wp-token-grid">
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--yellow)">40%</div><div class="wp-token-label">Community Rewards</div></div>
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--cyan)">25%</div><div class="wp-token-label">Streak Incentives</div></div>
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--orange)">15%</div><div class="wp-token-label">Builder Grants</div></div>
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--pink)">10%</div><div class="wp-token-label">Team & Ops</div></div>
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--purple)">7%</div><div class="wp-token-label">Treasury / DAO</div></div>
+            <div class="wp-token-item"><div class="wp-token-pct" style="color:var(--green)">3%</div><div class="wp-token-label">Liquidity Pool</div></div>
+          </div>
+          <div class="wp-divider"></div>
+          <p><strong>Mekanisme Distribusi:</strong> Token diberikan secara otomatis berdasarkan streak hari posting. Builder dengan streak 7 hari mendapat 10 $ODP/hari, streak 30 hari mendapat 25 $ODP/hari, dan streak 100+ hari mendapat 50 $ODP/hari plus badge NFT eksklusif.</p>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">05</span><span class="wp-sec-icon">🗳️</span><span class="wp-sec-title">Governance & DAO</span></div>
+        <div class="wp-body">
+          <p>OnchainDailyPosting dioperasikan sebagai <strong>community-first protocol</strong>. Setelah token launch, seluruh keputusan besar — mulai dari roadmap prioritas, fitur baru, hingga alokasi grants — akan diputuskan melalui voting DAO menggunakan <em>Snapshot</em>.</p>
+          <p>Setiap holder $ODP memiliki hak suara proporsional. Builder dengan streak aktif mendapat <strong>voting power boost 2x</strong> sebagai apresiasi atas konsistensi mereka. Proposal dapat diajukan oleh siapapun yang memegang minimal 100 $ODP.</p>
+          <div class="wp-divider"></div>
+          <p><strong>Sebelum token launch</strong>, komunitas dikelola secara transparan melalui Telegram <a href="https://t.me/mooneth05" target="_blank" style="color:var(--cyan)">@mooneth05</a> dan Farcaster <a href="https://farcaster.xyz/moooneth" target="_blank" style="color:var(--purple)">/moooneth</a> — semua diskusi terbuka dan dapat diikuti oleh siapapun.</p>
+        </div>
+      </div>
+
+      <div class="wp-section">
+        <div class="wp-sec-hd"><span class="wp-sec-n">06</span><span class="wp-sec-icon">🌏</span><span class="wp-sec-title">Visi & Misi</span></div>
+        <div class="wp-body">
+          <p><strong>Visi:</strong> Menjadikan Indonesia sebagai negara dengan komunitas builder onchain paling konsisten dan produktif di Asia Tenggara pada tahun 2026.</p>
+          <p><strong>Misi:</strong> Membangun infrastruktur sosial dan insentif yang mendorong setiap builder Indonesia untuk berkontribusi aktif di ekosistem Web3 setiap hari — satu post sekaligus.</p>
+          <div class="wp-divider"></div>
+          <p>Bergabung sekarang dan mulai streak kamu bersama <strong>2,400+ builder</strong> yang sudah aktif di OnchainDailyPosting. Setiap post adalah bukti kerja nyata di blockchain. <em>Post setiap hari, build onchain, grow together.</em></p>
+          <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+            <a href="https://t.me/mooneth05" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:rgba(0,229,204,.1);border:1px solid rgba(0,229,204,.3);border-radius:10px;color:var(--cyan);text-decoration:none;font-weight:700;font-size:.82rem;transition:all .15s">✈️ Join Telegram</a>
+            <a href="https://farcaster.xyz/moooneth" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:rgba(136,85,255,.1);border:1px solid rgba(136,85,255,.3);border-radius:10px;color:var(--purple);text-decoration:none;font-weight:700;font-size:.82rem;transition:all .15s">🟣 Follow Farcaster</a>
+            <a href="https://www.orynth.dev/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:rgba(240,224,64,.1);border:1px solid rgba(240,224,64,.3);border-radius:10px;color:var(--yellow);text-decoration:none;font-weight:700;font-size:.82rem;transition:all .15s">🔮 Orynth Platform</a>
+            <a href="https://twitter.com/mooneth05" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:rgba(255,255,255,.05);border:1px solid var(--border2);border-radius:10px;color:var(--muted2);text-decoration:none;font-weight:700;font-size:.82rem;transition:all .15s">𝕏 Twitter/X</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /wp-sections -->
+    <div class="spacer"></div>
+  </div><!-- /page-whitepaper -->
+
+</div><!-- /wrapper -->
+
+<footer>
+  <div class="wrapper fi">
+    <div class="fc">© 2025 OnchainDailyPosting · Built for ID Web3 Community</div>
+    <div class="fl">
+      <a href="https://t.me/mooneth05" target="_blank">Telegram</a>
+      <a href="https://farcaster.xyz/moooneth" target="_blank">Farcaster</a>
+      <a href="https://twitter.com/mooneth05" target="_blank">Twitter/X</a>
+      <a href="https://www.orynth.dev/" target="_blank">Orynth</a>
+      <a id="footerRoadmapLink">Roadmap</a>
+      <a id="footerWpLink">Whitepaper</a>
+      <a id="footerLearnLink">Panduan</a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "ISI_API_KEY",
-  authDomain: "ISI_PROJECT.firebaseapp.com",
-  projectId: "ISI_PROJECT"
-};
+// ── DATA ─────────────────────────────────────
+var POSTS=[
+  {id:1,author:"moontrader.eth",av:"🌙",avBg:"linear-gradient(135deg,#ff5c1a,#f02d7a)",time:"2 menit lalu",badge:"Alpha 🔥",bc:"#ff5c1a",bb:"rgba(255,92,26,.15)",accent:"#ff5c1a",chain:"Base",cc:"#00e5cc",likes:48,cmt:12,rc:7,
+   body:'Baru swap <span class="hi">12 ETH → USDC</span> di Uniswap V4. Gas fee murah pakai <span class="tag">$base</span> — cuma $0.002! 🤯 <span class="mention">@defilover.eth</span> harus coba chain ini.'},
+  {id:2,author:"whalehunter.eth",av:"🐋",avBg:"linear-gradient(135deg,#8855ff,#00e5cc)",time:"15 menit lalu",badge:"Whale Watch 👁️",bc:"#8855ff",bb:"rgba(136,85,255,.15)",accent:"#8855ff",chain:"Ethereum",cc:"#8855ff",likes:112,cmt:34,rc:28,
+   body:'Wallet <span class="hi">0x7f2a...9d3e</span> pindahin <span class="hi">500 ETH</span> ke Binance. Track di <span class="tag">#Arkham</span>. Hari ke-<span class="hi">47 streak</span>. 💪'},
+  {id:3,author:"defilover.eth",av:"⚡",avBg:"linear-gradient(135deg,#f0e040,#ff5c1a)",time:"32 menit lalu",badge:"DeFi 💎",bc:"#f0e040",bb:"rgba(240,224,64,.12)",accent:"#f0e040",chain:"Ethereum",cc:"#8855ff",likes:67,cmt:19,rc:15,
+   body:'LP di <span class="tag">#GMX</span> generate <span class="hi">0.8 ETH</span> dalam 30 hari. <span class="tag">#onchaindailyposting</span> challenge hari ke-31!'},
+  {id:4,author:"nftbuilder.eth",av:"🎨",avBg:"linear-gradient(135deg,#f02d7a,#8855ff)",time:"1 jam lalu",badge:"Builder 🛠️",bc:"#f02d7a",bb:"rgba(240,45,122,.12)",accent:"#f02d7a",chain:"Base",cc:"#00e5cc",likes:89,cmt:41,rc:22,
+   body:'Deploy smart contract pertama di <span class="tag">#Base</span> hari ini! ERC-721 milestone. Hari ke-<span class="hi">23</span> dan makin semangat! 🔥'},
+  {id:5,author:"cryptomom.eth",av:"🌸",avBg:"linear-gradient(135deg,#39ff7e,#00e5cc)",time:"2 jam lalu",badge:"Newbie 🌱",bc:"#39ff7e",bb:"rgba(57,255,126,.12)",accent:"#39ff7e",chain:"Solana",cc:"#9945ff",likes:134,cmt:56,rc:31,
+   body:'Berhasil pakai <span class="tag">#Phantom</span> Wallet sendiri! Swap pertama di <span class="tag">#Jupiter</span> sukses 🎉. Hari ke-5!'}
+];
+var STRKRS=[
+  {r:"1",av:"🌙",nm:"moontrader.eth",bg:"linear-gradient(135deg,#ff5c1a,#f02d7a)",d:"47 hari streak",f:"🔥×47",c:"#ff5c1a"},
+  {r:"2",av:"🐋",nm:"whalehunter.eth",bg:"linear-gradient(135deg,#8855ff,#00e5cc)",d:"38 hari streak",f:"🔥×38",c:"#8855ff"},
+  {r:"3",av:"⚡",nm:"defilover.eth",bg:"linear-gradient(135deg,#f0e040,#ff5c1a)",d:"31 hari streak",f:"🔥×31",c:"#f0e040"},
+  {r:"4",av:"🎨",nm:"nftbuilder.eth",bg:"linear-gradient(135deg,#f02d7a,#8855ff)",d:"23 hari streak",f:"🔥×23",c:"#f02d7a"},
+  {r:"5",av:"🌸",nm:"cryptomom.eth",bg:"linear-gradient(135deg,#39ff7e,#00e5cc)",d:"5 hari streak",f:"🔥×5",c:"#39ff7e"}
+];
+var TOPICS=[
+  {nm:"#onchaindailyposting",cnt:"312 posts",color:"#f0e040",pct:100,chain:"all"},
+  {nm:"#base",cnt:"189 posts",color:"#00e5cc",pct:61,chain:"Base"},
+  {nm:"#ethereum",cnt:"147 posts",color:"#8855ff",pct:47,chain:"Ethereum"},
+  {nm:"#defi",cnt:"98 posts",color:"#ff5c1a",pct:31,chain:"all"},
+  {nm:"#nft",cnt:"76 posts",color:"#f02d7a",pct:24,chain:"all"}
+];
+var CHAINS=[
+  {logo:"🔵",nm:"Base",p:"189 posts",c:"#00e5cc"},
+  {logo:"Ξ",nm:"Ethereum",p:"147 posts",c:"#8855ff"},
+  {logo:"◎",nm:"Solana",p:"88 posts",c:"#9945ff"},
+  {logo:"🔺",nm:"Arbitrum",p:"54 posts",c:"#28a0f0"},
+  {logo:"🟣",nm:"Polygon",p:"33 posts",c:"#8247e5"}
+];
+var LB=[
+  {r:1,n:"moontrader.eth",s:47,c:"Base",p:312},{r:2,n:"whalehunter.eth",s:38,c:"Ethereum",p:267},
+  {r:3,n:"defilover.eth",s:31,c:"Ethereum",p:219},{r:4,n:"nftbuilder.eth",s:23,c:"Base",p:156},
+  {r:5,n:"cryptomom.eth",s:5,c:"Solana",p:34},{r:6,n:"alphacaller.eth",s:19,c:"Arbitrum",p:132},
+  {r:7,n:"gasfeehater.eth",s:14,c:"Base",p:98},{r:8,n:"hodlking.eth",s:12,c:"Ethereum",p:84},
+  {r:9,n:"zkproof.eth",s:9,c:"Solana",p:61},{r:10,n:"basedevgod.eth",s:7,c:"Base",p:47}
+];
+var FALLBACK=[
+  {sym:"ETH",price:3842,ch:2.4},{sym:"BTC",price:67210,ch:1.1},
+  {sym:"SOL",price:182.5,ch:-0.8},{sym:"ARB",price:1.24,ch:5.2},
+  {sym:"OP",price:2.87,ch:-1.3},{sym:"UNI",price:9.85,ch:3.1}
+];
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+var userPosts=[], liked={}, activeFilter="all";
 
-// LOGIN
-function login(){
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider);
-}
-
-// USER
-auth.onAuthStateChanged(user=>{
-  if(user){
-    document.getElementById("user").innerText = "Login: " + user.displayName;
-    loadPosts();
-  }
-});
-
-// POST
-function postData(){
-  const text = document.getElementById("input").value;
-  if(!text) return alert("Isi dulu!");
-
-  db.collection("posts").add({
-    text:text,
-    created:Date.now()
+// ── NAVIGATION ────────────────────────────────
+function goTo(pg){
+  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
+  var el=document.getElementById("page-"+pg);
+  if(el) el.classList.add("active");
+  document.querySelectorAll("[data-page]").forEach(function(a){
+    a.classList.toggle("active",a.getAttribute("data-page")===pg);
   });
-
-  document.getElementById("input").value="";
+  var mn=document.getElementById("mobNav");
+  var hb=document.getElementById("hbgBtn");
+  mn.classList.remove("open"); hb.classList.remove("open");
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
-// LOAD
-function loadPosts(){
-  db.collection("posts")
-  .orderBy("created","desc")
-  .onSnapshot(snapshot=>{
-    const feed = document.getElementById("feedList");
-    feed.innerHTML="";
+// ── TICKER ────────────────────────────────────
+function fmtP(p){
+  if(p>=10000) return "$"+p.toLocaleString("en-US",{maximumFractionDigits:0});
+  if(p>=100)   return "$"+p.toLocaleString("en-US",{maximumFractionDigits:2});
+  return "$"+p.toLocaleString("en-US",{maximumFractionDigits:3});
+}
+function tickHtml(coins){
+  return coins.map(function(c){
+    return '<span class="ti"><span class="ts">'+c.sym+'</span><span>'+fmtP(c.price)+'</span>'
+      +'<span class="'+(c.ch>=0?"tu":"td")+'">'+(c.ch>=0?"+":"")+c.ch.toFixed(2)+'%</span></span>';
+  }).join("");
+}
+function loadTicker(){
+  fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin,solana,arbitrum,optimism,uniswap&vs_currencies=usd&include_24hr_change=true")
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var map={ethereum:"ETH",bitcoin:"BTC",solana:"SOL",arbitrum:"ARB",optimism:"OP",uniswap:"UNI"};
+      var coins=Object.keys(map).filter(function(k){return d[k]&&d[k].usd;}).map(function(k){
+        return {sym:map[k],price:d[k].usd,ch:d[k].usd_24h_change||0};
+      });
+      if(coins.length<2) throw 0;
+      var h=tickHtml(coins);
+      document.getElementById("tSet1").innerHTML=h;
+      document.getElementById("tSet2").innerHTML=h;
+    }).catch(function(){
+      var h=tickHtml(FALLBACK);
+      document.getElementById("tSet1").innerHTML=h;
+      document.getElementById("tSet2").innerHTML=h;
+    });
+}
 
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-
-      const el = document.createElement("div");
-      el.className="post";
-
-      el.innerHTML = `
-        <div>${data.text}</div>
-      `;
-
-      feed.appendChild(el);
+// ── FEED ─────────────────────────────────────
+function getFiltered(){
+  var all=userPosts.concat(POSTS);
+  if(activeFilter==="all") return all;
+  if(activeFilter==="trending") return all.slice().sort(function(a,b){return(b.likes+b.cmt)-(a.likes+a.cmt);});
+  return all.filter(function(p){return p.chain===activeFilter;});
+}
+function setFilter(val){
+  activeFilter=val;
+  document.querySelectorAll(".ftab").forEach(function(t){t.classList.toggle("active",t.getAttribute("data-filter")===val);});
+  document.querySelectorAll(".ch-item").forEach(function(el){el.classList.toggle("active",el.getAttribute("data-chain")===val);});
+  renderFeed();
+}
+function renderFeed(){
+  var posts=getFiltered();
+  var feed=document.getElementById("feed");
+  document.getElementById("feedCount").textContent=posts.length+" posts";
+  if(!posts.length){
+    feed.innerHTML='<div class="empty"><div class="ei">🔍</div><p>Belum ada post untuk filter ini.</p></div>';
+    return;
+  }
+  feed.innerHTML=posts.map(function(p,i){
+    return '<div class="pc" style="animation-delay:'+Math.min(i*.07,.4)+'s" data-pid="'+p.id+'">'
+      +'<div class="p-acc" style="background:'+p.accent+'"></div>'
+      +'<div class="p-hd">'
+        +'<div class="av" style="background:'+p.avBg+'">'+p.av+'</div>'
+        +'<div class="p-meta"><div class="p-auth">'+p.author+'</div><div class="p-time">'+p.time+'</div></div>'
+        +'<div class="p-bdg" style="color:'+p.bc+';background:'+p.bb+'">'+p.badge+'</div>'
+      +'</div>'
+      +'<div class="p-body">'+p.body+'</div>'
+      +'<div class="p-chain"><div class="cdot" style="background:'+p.cc+'"></div>'+p.chain+'</div>'
+      +'<div class="p-ft">'
+        +'<button class="rxn lbtn'+(liked[p.id]?" liked":"")+'">❤️ <span>'+p.likes+'</span></button>'
+        +'<button class="rxn">💬 '+p.cmt+'</button>'
+        +'<button class="rxn">🔁 '+p.rc+'</button>'
+        +'<button class="shr sbtn">↗ Share</button>'
+      +'</div>'
+    +'</div>';
+  }).join("");
+  // Like buttons
+  feed.querySelectorAll(".lbtn").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var id=parseInt(btn.closest(".pc").getAttribute("data-pid"));
+      var post=userPosts.concat(POSTS).filter(function(p){return p.id===id;})[0];
+      if(!post) return;
+      if(liked[id]){liked[id]=false;post.likes--;btn.classList.remove("liked");}
+      else{liked[id]=true;post.likes++;btn.classList.add("liked");}
+      btn.querySelector("span").textContent=post.likes;
+    });
+  });
+  // Share buttons
+  feed.querySelectorAll(".sbtn").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var txt="Cek aktivitas onchain di OnchainDailyPosting! #onchaindailyposting";
+      if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){showToast("✅ Link disalin!","ok");});}
+      else{showToast("✅ Share berhasil!","ok");}
     });
   });
 }
-</script>
 
+// ── COMPOSE ──────────────────────────────────
+function initCompose(){
+  var inp=document.getElementById("cInput");
+  var chr=document.getElementById("cChr");
+  var sub=document.getElementById("cSub");
+  inp.addEventListener("input",function(){
+    var n=inp.value.length;
+    chr.textContent=n+"/280";
+    chr.className="c-chr"+(n>240?" warn":"");
+    sub.disabled=n===0;
+  });
+  document.querySelectorAll(".c-tag").forEach(function(tagBtn){
+    tagBtn.addEventListener("click",function(){
+      var tag=tagBtn.getAttribute("data-tag");
+      if(inp.value.indexOf(tag)===-1){
+        inp.value+=(inp.value.length&&!inp.value.endsWith(" ")?" ":"")+tag+" ";
+        tagBtn.classList.add("sel");
+      } else {
+        inp.value=inp.value.replace(tag,"").replace(/\s+/g," ").trim()+" ";
+        tagBtn.classList.remove("sel");
+      }
+      inp.dispatchEvent(new Event("input"));
+      inp.focus();
+    });
+  });
+  sub.addEventListener("click",function(){
+    var txt=inp.value.trim();
+    if(!txt) return;
+    var chain="Base",cc="#00e5cc";
+    if(txt.indexOf("#eth")!==-1||txt.indexOf("#ethereum")!==-1){chain="Ethereum";cc="#8855ff";}
+    else if(txt.indexOf("#solana")!==-1||txt.indexOf("#sol")!==-1){chain="Solana";cc="#9945ff";}
+    else if(txt.indexOf("#arb")!==-1){chain="Arbitrum";cc="#28a0f0";}
+    userPosts.unshift({
+      id:Date.now(),author:"kamu.eth",av:"🔥",avBg:"linear-gradient(135deg,#f0e040,#ff5c1a)",
+      time:"baru saja",badge:"Fresh 🆕",bc:"#39ff7e",bb:"rgba(57,255,126,.12)",
+      accent:"#39ff7e",chain:chain,cc:cc,likes:0,cmt:0,rc:0,
+      body:txt.replace(/(#\w+)/g,'<span class="tag">$1</span>').replace(/(@[\w.]+)/g,'<span class="mention">$1</span>')
+    });
+    inp.value=""; chr.textContent="0/280"; chr.className="c-chr"; sub.disabled=true;
+    document.querySelectorAll(".c-tag").forEach(function(t){t.classList.remove("sel");});
+    activeFilter="all";
+    document.querySelectorAll(".ftab").forEach(function(t){t.classList.toggle("active",t.getAttribute("data-filter")==="all");});
+    renderFeed();
+    var tc=document.getElementById("todayCount");
+    tc.textContent=parseInt(tc.textContent)+1;
+    showToast("🔥 Post berhasil! Streak kamu bertambah!","ok");
+  });
+}
+
+// ── SIDEBAR ──────────────────────────────────
+function renderStreakers(){
+  var rc=["g","s","b","",""];
+  document.getElementById("strList").innerHTML=STRKRS.map(function(s,i){
+    return '<div class="str-item"><div class="str-rk '+rc[i]+'">#'+s.r+'</div>'
+      +'<div class="str-av" style="background:'+s.bg+'">'+s.av+'</div>'
+      +'<div class="str-info"><div class="str-nm">'+s.nm+'</div><div class="str-d">'+s.d+'</div></div>'
+      +'<div class="str-f" style="color:'+s.c+'">'+s.f+'</div></div>';
+  }).join("");
+}
+function renderTopics(){
+  document.getElementById("topicList").innerHTML=TOPICS.map(function(t){
+    return '<div class="t2" data-chain="'+t.chain+'">'
+      +'<div><div class="t-nm" style="color:'+t.color+'">'+t.nm+'</div>'
+      +'<div class="t-bar"><div class="t-fill" style="width:0%;background:'+t.color+'" data-w="'+t.pct+'"></div></div></div>'
+      +'<div class="t-cnt">'+t.cnt+'</div></div>';
+  }).join("");
+  setTimeout(function(){
+    document.querySelectorAll(".t-fill").forEach(function(el){el.style.width=el.getAttribute("data-w")+"%";});
+  },150);
+  document.querySelectorAll(".t2").forEach(function(el){
+    el.addEventListener("click",function(){setFilter(el.getAttribute("data-chain"));});
+  });
+}
+function renderChains(){
+  document.getElementById("chList").innerHTML=CHAINS.map(function(c,i){
+    return '<div class="ch-item'+(i===0?" active":"")+'" data-chain="'+c.nm+'">'
+      +'<div class="ch-l"><div class="ch-logo" style="background:'+c.c+'22">'+c.logo+'</div>'
+      +'<div class="ch-nm">'+c.nm+'</div></div>'
+      +'<div class="ch-p">'+c.p+'</div></div>';
+  }).join("");
+  document.querySelectorAll(".ch-item").forEach(function(el){
+    el.addEventListener("click",function(){
+      document.querySelectorAll(".ch-item").forEach(function(x){x.classList.remove("active");});
+      el.classList.add("active");
+      setFilter(el.getAttribute("data-chain"));
+    });
+  });
+}
+function renderLeaderboard(){
+  var medals=["🥇","🥈","🥉"];
+  document.getElementById("lbBody").innerHTML=LB.map(function(d){
+    return "<tr><td>"+(medals[d.r-1]||d.r)+"</td><td><strong>"+d.n+"</strong></td>"
+      +'<td><span class="lb-s">🔥 '+d.s+' hari</span></td>'
+      +'<td><span class="lb-c">'+d.c+"</span></td><td>"+d.p+"</td></tr>";
+  }).join("");
+}
+
+// ── TOAST ────────────────────────────────────
+var toastT;
+function showToast(msg,type){
+  var t=document.getElementById("toast");
+  t.textContent=msg; t.className="toast show"+(type?" "+type:"");
+  clearTimeout(toastT);
+  toastT=setTimeout(function(){t.classList.remove("show");},3000);
+}
+
+// ── LIVE SIM ─────────────────────────────────
+function startLive(){
+  var n=312;
+  setInterval(function(){
+    if(Math.random()>.5){n++;document.getElementById("todayCount").textContent=n;}
+    document.getElementById("liveCount").textContent=(300+Math.floor(Math.random()*40))+" online";
+  },9000);
+}
+
+// ── SCROLL TO COMPOSE ────────────────────────
+function scrollToCompose(){
+  goTo("feed");
+  setTimeout(function(){
+    document.getElementById("composeBox").scrollIntoView({behavior:"smooth",block:"center"});
+    document.getElementById("cInput").focus();
+  },150);
+}
+
+// ── INIT — after DOM ready ────────────────────
+document.addEventListener("DOMContentLoaded",function(){
+
+  // Nav links (desktop)
+  document.querySelectorAll("#mainNav [data-page]").forEach(function(a){
+    a.addEventListener("click",function(e){e.preventDefault();goTo(a.getAttribute("data-page"));});
+  });
+  // Nav links (mobile)
+  document.querySelectorAll("#mobNav [data-page]").forEach(function(a){
+    a.addEventListener("click",function(e){e.preventDefault();goTo(a.getAttribute("data-page"));});
+  });
+
+  // Logo → Feed
+  document.getElementById("logoBtn").addEventListener("click",function(){goTo("feed");});
+
+  // Hamburger
+  document.getElementById("hbgBtn").addEventListener("click",function(){
+    document.getElementById("mobNav").classList.toggle("open");
+    document.getElementById("hbgBtn").classList.toggle("open");
+  });
+
+  // Header CTA
+  document.getElementById("postNowBtn").addEventListener("click",scrollToCompose);
+  // Hero buttons
+  document.getElementById("startPostBtn").addEventListener("click",function(){
+    document.getElementById("composeBox").scrollIntoView({behavior:"smooth",block:"center"});
+    document.getElementById("cInput").focus();
+  });
+  document.getElementById("exploreBtn").addEventListener("click",function(){goTo("explore");});
+
+  // Filter tabs
+  document.getElementById("filterTabs").addEventListener("click",function(e){
+    var tab=e.target.closest(".ftab");
+    if(tab) setFilter(tab.getAttribute("data-filter"));
+  });
+
+  // Explore cards
+  document.querySelectorAll(".exp-card[data-goto]").forEach(function(c){
+    c.addEventListener("click",function(){goTo(c.getAttribute("data-goto"));});
+  });
+  document.querySelectorAll(".exp-card[data-href]").forEach(function(c){
+    c.addEventListener("click",function(){window.open(c.getAttribute("data-href"),"_blank");});
+  });
+
+  // Sidebar links
+  document.getElementById("learnSideLink").addEventListener("click",function(){goTo("learn");});
+  document.getElementById("roadmapSideLink").addEventListener("click",function(){goTo("roadmap");});
+  document.getElementById("wpSideLink").addEventListener("click",function(){goTo("whitepaper");});
+  // Footer links
+  document.getElementById("footerLearnLink").addEventListener("click",function(){goTo("learn");});
+  document.getElementById("footerRoadmapLink").addEventListener("click",function(){goTo("roadmap");});
+  document.getElementById("footerWpLink").addEventListener("click",function(){goTo("whitepaper");});
+
+  // Load everything
+  loadTicker();
+  setInterval(loadTicker,60000);
+  renderFeed();
+  renderStreakers();
+  renderTopics();
+  renderChains();
+  renderLeaderboard();
+  initCompose();
+  startLive();
+});
+</script>
 </body>
 </html>
