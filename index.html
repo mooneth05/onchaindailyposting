@@ -1,691 +1,293 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OnchainDailyPosting — Community Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <style>
-    /* SYSTEM FONT FALLBACKS — tampil duluan sebelum Google Fonts load */
-    @font-face {
-      font-family: 'Syne';
-      font-style: normal;
-      font-weight: 400 800;
-      src: local('Syne'), local('Arial Black');
-      font-display: swap;
-    }
-    body { font-family: 'Syne', 'Trebuchet MS', 'Arial Black', Arial, sans-serif !important; }
-    .logo-sub, .post-time, .post-badge, .stat-label, .section-tag,
-    .post-chain, .streak-rank, .streak-days, .streak-fire, .topic-count,
-    .chain-posts, .ticker-item, .footer-copy, .footer-links a,
-    .side-card-title, .compose-tag-btn { font-family: 'Space Mono', 'Courier New', Courier, monospace !important; }
-  </style>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OnchainDailyPosting — Community Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<style>
+@font-face { font-family:'Syne'; font-style:normal; font-weight:400 800; src:local('Syne'),local('Arial Black'); font-display:swap; }
+body { font-family:'Syne','Trebuchet MS','Arial Black',Arial,sans-serif !important; }
+.logo-sub,.post-time,.post-badge,.stat-label,.section-tag,.post-chain,.streak-rank,.streak-days,.streak-fire,.topic-count,.chain-posts,.ticker-item,.footer-copy,.footer-links a,.side-card-title,.compose-tag-btn,.badge-label { font-family:'Space Mono','Courier New',Courier,monospace !important; }
+</style>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--card:#111118;--border:#1e1e2e;
+  --yellow:#f5e642;--orange:#ff6b35;--pink:#ff3cac;
+  --cyan:#3cf0e0;--green:#4dff91;--purple:#9b5de5;
+  --white:#f0f0f8;--muted:#6b6b8a;
+  --base:#3cf0e0;--eth:#9b5de5;--sol:#9945ff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden}
 
-    :root {
-      --bg: #0a0a0f;
-      --card: #111118;
-      --border: #1e1e2e;
-      --yellow: #f5e642;
-      --orange: #ff6b35;
-      --pink: #ff3cac;
-      --cyan: #3cf0e0;
-      --green: #4dff91;
-      --purple: #9b5de5;
-      --white: #f0f0f8;
-      --muted: #6b6b8a;
-    }
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1;opacity:0.3}
 
-    html { scroll-behavior: smooth; }
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:0.12}
+.blob-1{width:600px;height:600px;background:var(--pink);top:-200px;left:-100px;animation:float1 12s ease-in-out infinite}
+.blob-2{width:500px;height:500px;background:var(--cyan);top:30%;right:-150px;animation:float2 15s ease-in-out infinite}
+.blob-3{width:400px;height:400px;background:var(--yellow);bottom:-100px;left:30%;animation:float3 10s ease-in-out infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,40px)}}
+@keyframes float3{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
 
-    body {
-      background: var(--bg);
-      color: var(--white);
-      font-family: 'Syne', sans-serif;
-      overflow-x: hidden;
-      cursor: default;
-    }
+.wrapper{position:relative;z-index:10;max-width:1200px;margin:0 auto;padding:0 24px}
 
-    /* NOISE OVERLAY */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.3;
-    }
+/* HEADER */
+header{padding:20px 0;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;background:rgba(10,10,15,0.88);backdrop-filter:blur(16px)}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+.logo-icon{width:40px;height:40px;background:var(--yellow);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.logo-text{font-size:1.1rem;font-weight:800;letter-spacing:-0.5px;line-height:1.1}
+.logo-text span{color:var(--yellow)}
+.logo-sub{font-size:0.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+nav{display:flex;gap:8px}
+nav a{padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:700;text-decoration:none;color:var(--muted);letter-spacing:0.5px;transition:all 0.2s}
+nav a:hover{color:var(--white);background:var(--border)}
+nav a.active{color:var(--bg);background:var(--yellow)}
+.header-right{display:flex;align-items:center;gap:10px}
+.twitter-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:0.78rem;font-weight:700;text-decoration:none;transition:all 0.2s;font-family:'Syne',sans-serif}
+.twitter-btn:hover{color:var(--white);border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.05)}
+.twitter-btn svg{width:14px;height:14px;fill:currentColor}
+.header-cta{padding:10px 20px;border-radius:10px;background:var(--yellow);color:var(--bg);font-weight:800;font-size:0.82rem;border:none;cursor:pointer;letter-spacing:0.5px;transition:transform 0.15s,box-shadow 0.15s;font-family:'Syne',sans-serif}
+.header-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,230,66,0.3)}
 
-    /* BACKGROUND BLOBS */
-    .bg-blobs {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .blob {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.12;
-    }
-    .blob-1 { width: 600px; height: 600px; background: var(--pink); top: -200px; left: -100px; animation: float1 12s ease-in-out infinite; }
-    .blob-2 { width: 500px; height: 500px; background: var(--cyan); top: 30%; right: -150px; animation: float2 15s ease-in-out infinite; }
-    .blob-3 { width: 400px; height: 400px; background: var(--yellow); bottom: -100px; left: 30%; animation: float3 10s ease-in-out infinite; }
+/* TICKER */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 0;position:relative;z-index:10}
+.ticker-wrap::before,.ticker-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.ticker-wrap::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.ticker-wrap::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.ticker-track{display:flex;width:max-content;animation:ticker 35s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-set{display:flex;gap:0}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;color:var(--muted);padding:0 28px;border-right:1px solid var(--border)}
+.ticker-item .up{color:var(--green)}
+.ticker-item .down{color:var(--pink)}
+.ticker-sym{color:var(--white);font-weight:700}
 
-    @keyframes float1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
-    @keyframes float2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,40px)} }
-    @keyframes float3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-30px)} }
+/* HERO */
+.hero{padding:80px 0 60px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-label{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(255,60,172,0.12);border:1px solid rgba(255,60,172,0.3);border-radius:20px;font-size:0.72rem;font-family:'Space Mono',monospace;color:var(--pink);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+.pulse{width:8px;height:8px;background:var(--pink);border-radius:50%;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+.hero h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:20px}
+.hero h1 .line-yellow{color:var(--yellow);display:block}
+.hero h1 .line-stroke{-webkit-text-stroke:2px var(--orange);color:transparent;display:block}
+.hero-desc{font-size:1rem;color:var(--muted);line-height:1.7;margin-bottom:32px;max-width:420px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{padding:14px 28px;background:linear-gradient(135deg,var(--orange),var(--pink));color:white;font-weight:800;font-size:0.9rem;border:none;border-radius:12px;cursor:pointer;letter-spacing:0.3px;transition:transform 0.15s,box-shadow 0.2s;font-family:'Syne',sans-serif}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,107,53,0.35)}
+.btn-ghost{padding:14px 28px;background:transparent;color:var(--white);font-weight:700;font-size:0.9rem;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:border-color 0.2s,background 0.2s;font-family:'Syne',sans-serif}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(60,240,224,0.05)}
 
-    /* LAYOUT */
-    .wrapper { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+/* STATS */
+.stats-strip{display:flex;gap:4px}
+.stat-card{flex:1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s}
+.stat-card:hover{transform:translateY(-4px)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-card:nth-child(1)::before{background:var(--yellow)}
+.stat-card:nth-child(2)::before{background:var(--pink)}
+.stat-card:nth-child(3)::before{background:var(--cyan)}
+.stat-card:nth-child(4)::before{background:var(--green)}
+.stat-num{font-size:1.8rem;font-weight:800;letter-spacing:-1px;display:block;margin-bottom:4px}
+.stat-card:nth-child(1) .stat-num{color:var(--yellow)}
+.stat-card:nth-child(2) .stat-num{color:var(--pink)}
+.stat-card:nth-child(3) .stat-num{color:var(--cyan)}
+.stat-card:nth-child(4) .stat-num{color:var(--green)}
+.stat-label{font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
 
-    /* ── HEADER ── */
-    header {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(16px);
-    }
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .logo-icon {
-      width: 40px; height: 40px;
-      background: var(--yellow);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-    .logo-text {
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      line-height: 1.1;
-    }
-    .logo-text span { color: var(--yellow); }
-    .logo-sub { font-size: 0.65rem; font-family: 'Space Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+/* SECTION TITLE */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.section-title{font-size:1.4rem;font-weight:800;letter-spacing:-0.5px}
+.section-tag{font-size:0.7rem;color:var(--muted);background:var(--border);padding:5px 12px;border-radius:20px;letter-spacing:1px}
 
-    nav { display: flex; gap: 8px; }
-    nav a {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-    }
-    nav a:hover { color: var(--white); background: var(--border); }
-    nav a.active { color: var(--bg); background: var(--yellow); }
+/* MAIN GRID */
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;padding:40px 0 60px}
 
-    .header-cta {
-      padding: 10px 20px;
-      border-radius: 10px;
-      background: var(--yellow);
-      color: var(--bg);
-      font-weight: 800;
-      font-size: 0.82rem;
-      border: none;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .header-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,230,66,0.3); }
+/* FEED */
+.feed{display:flex;flex-direction:column;gap:16px}
+.post-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;animation:fadeUp 0.5s ease both}
+.post-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,0.12)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.post-accent{position:absolute;top:0;left:0;width:3px;height:100%;border-radius:3px 0 0 3px}
+.post-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.avatar{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:800;flex-shrink:0}
+.post-meta{flex:1}
+.post-author{font-size:0.9rem;font-weight:700;margin-bottom:2px}
+.post-time{font-size:0.68rem;color:var(--muted)}
+.post-badge{font-size:0.62rem;padding:4px 10px;border-radius:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
+.post-content{font-size:0.92rem;line-height:1.65;color:#c8c8e0;margin-bottom:16px}
+.post-content .tag{color:var(--cyan);font-weight:700}
+.post-content .mention{color:var(--pink);font-weight:700}
+.post-content .highlight{color:var(--yellow);font-weight:700}
+.post-chain{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;font-size:0.68rem;color:var(--muted);margin-bottom:14px}
+.chain-dot{width:6px;height:6px;border-radius:50%}
+.post-footer{display:flex;align-items:center;gap:6px;padding-top:14px;border-top:1px solid var(--border)}
+.reaction-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-size:0.75rem;font-family:'Syne',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s}
+.reaction-btn:hover{border-color:var(--yellow);color:var(--yellow);background:rgba(245,230,66,0.06)}
+.reaction-btn.active{border-color:var(--orange);color:var(--orange);background:rgba(255,107,53,0.08)}
+.post-share{margin-left:auto;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-size:0.75rem;cursor:pointer;transition:all 0.15s;font-family:'Syne',sans-serif}
+.post-share:hover{color:var(--cyan);border-color:var(--cyan)}
 
-    /* ── HERO ── */
-    .hero {
-      padding: 80px 0 60px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-    }
-    .hero-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(255,60,172,0.12);
-      border: 1px solid rgba(255,60,172,0.3);
-      border-radius: 20px;
-      font-size: 0.72rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--pink);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .pulse { width: 8px; height: 8px; background: var(--pink); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+/* COMPOSE */
+.compose-bar{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;transition:border-color 0.2s}
+.compose-bar:focus-within{border-color:var(--yellow)}
+.compose-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--orange),var(--pink));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.compose-input{flex:1;background:none;border:none;color:var(--white);font-family:'Syne',sans-serif;font-size:0.9rem;resize:none;outline:none;padding-top:6px;min-height:60px;width:100%}
+.compose-input::placeholder{color:var(--muted)}
+.compose-actions{display:flex;gap:8px;align-items:center;margin-top:10px}
+.compose-tag-btn{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--muted);font-size:0.78rem;cursor:pointer;transition:all 0.15s}
+.compose-tag-btn:hover{color:var(--cyan);border-color:var(--cyan)}
+.compose-submit{margin-left:auto;padding:8px 20px;background:var(--yellow);color:var(--bg);font-weight:800;font-size:0.8rem;border:none;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;transition:transform 0.15s,box-shadow 0.15s}
+.compose-submit:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(245,230,66,0.3)}
 
-    .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      margin-bottom: 20px;
-    }
-    .hero h1 .line-yellow { color: var(--yellow); display: block; }
-    .hero h1 .line-stroke {
-      -webkit-text-stroke: 2px var(--orange);
-      color: transparent;
-      display: block;
-    }
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.filter-tab{padding:8px 18px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--muted);font-size:0.78rem;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;transition:all 0.15s;letter-spacing:0.3px}
+.filter-tab:hover{color:var(--white);border-color:rgba(255,255,255,0.2)}
+.filter-tab.active{background:var(--yellow);color:var(--bg);border-color:var(--yellow)}
 
-    .hero-desc {
-      font-size: 1rem;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 32px;
-      max-width: 420px;
-    }
+/* SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;animation:fadeUp 0.5s ease both}
+.side-card-title{font-size:0.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.streak-list{display:flex;flex-direction:column;gap:10px}
+.streak-item{display:flex;align-items:center;gap:10px}
+.streak-rank{width:22px;font-size:0.7rem;color:var(--muted);text-align:center;flex-shrink:0}
+.streak-rank.top{color:var(--yellow);font-weight:700}
+.streak-avatar{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;flex-shrink:0}
+.streak-info{flex:1}
+.streak-name{font-size:0.82rem;font-weight:700}
+.streak-days{font-size:0.65rem;color:var(--muted)}
+.streak-fire{font-size:0.8rem;font-weight:700}
+.topic-list{display:flex;flex-direction:column;gap:8px}
+.topic-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.03);border:1px solid var(--border);cursor:pointer;transition:all 0.15s}
+.topic-item:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12)}
+.topic-name{font-size:0.82rem;font-weight:700}
+.topic-count{font-size:0.65rem;color:var(--muted)}
+.chain-filter{display:flex;flex-direction:column;gap:8px}
+.chain-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;cursor:pointer;border:1px solid transparent;transition:all 0.15s}
+.chain-item:hover{background:rgba(255,255,255,0.04);border-color:var(--border)}
+.chain-item.active{background:rgba(245,230,66,0.07);border-color:rgba(245,230,66,0.3)}
+.chain-left{display:flex;align-items:center;gap:10px}
+.chain-logo{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.85rem}
+.chain-name{font-size:0.82rem;font-weight:700}
+.chain-posts{font-size:0.65rem;color:var(--muted)}
 
-    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn-primary {
-      padding: 14px 28px;
-      background: linear-gradient(135deg, var(--orange), var(--pink));
-      color: white;
-      font-weight: 800;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      letter-spacing: 0.3px;
-      transition: transform 0.15s, box-shadow 0.2s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,107,53,0.35); }
-    .btn-ghost {
-      padding: 14px 28px;
-      background: transparent;
-      color: var(--white);
-      font-weight: 700;
-      font-size: 0.9rem;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(60,240,224,0.05); }
+/* ── BADGE SECTION ── */
+.badges-section{padding:60px 0;border-top:1px solid var(--border)}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-top:32px}
+.badge-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px 16px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;cursor:default}
+.badge-card:hover{transform:translateY(-4px)}
+.badge-card::before{content:'';position:absolute;inset:0;opacity:0.06;transition:opacity 0.2s}
+.badge-card:hover::before{opacity:0.1}
+.badge-card.base::before{background:var(--base)}
+.badge-card.eth::before{background:var(--eth)}
+.badge-card.sol::before{background:var(--sol)}
+.badge-card.base{border-color:rgba(60,240,224,0.25)}
+.badge-card.eth{border-color:rgba(155,93,229,0.25)}
+.badge-card.sol{border-color:rgba(153,69,255,0.25)}
+.badge-icon{font-size:2.4rem;margin-bottom:12px;display:block;filter:drop-shadow(0 0 16px currentColor)}
+.badge-chain-name{font-size:0.95rem;font-weight:800;margin-bottom:6px}
+.badge-card.base .badge-chain-name{color:var(--base)}
+.badge-card.eth .badge-chain-name{color:var(--eth)}
+.badge-card.sol .badge-chain-name{color:var(--sol)}
+.badge-label{font-size:0.62rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:block}
+.badge-desc{font-size:0.78rem;color:#a0a0c0;line-height:1.5;margin-bottom:14px}
+.badge-pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.65rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;font-family:'Space Mono',monospace}
+.badge-card.base .badge-pill{background:rgba(60,240,224,0.12);color:var(--base);border:1px solid rgba(60,240,224,0.3)}
+.badge-card.eth .badge-pill{background:rgba(155,93,229,0.12);color:var(--eth);border:1px solid rgba(155,93,229,0.3)}
+.badge-card.sol .badge-pill{background:rgba(153,69,255,0.12);color:var(--sol);border:1px solid rgba(153,69,255,0.3)}
+.badge-earned{font-size:0.68rem;color:var(--muted);margin-top:6px}
 
-    /* STATS STRIP */
-    .stats-strip {
-      display: flex;
-      gap: 4px;
-    }
-    .stat-card {
-      flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s;
-    }
-    .stat-card:hover { transform: translateY(-4px); }
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-    }
-    .stat-card:nth-child(1)::before { background: var(--yellow); }
-    .stat-card:nth-child(2)::before { background: var(--pink); }
-    .stat-card:nth-child(3)::before { background: var(--cyan); }
-    .stat-card:nth-child(4)::before { background: var(--green); }
-    .stat-num {
-      font-size: 1.8rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .stat-card:nth-child(1) .stat-num { color: var(--yellow); }
-    .stat-card:nth-child(2) .stat-num { color: var(--pink); }
-    .stat-card:nth-child(3) .stat-num { color: var(--cyan); }
-    .stat-card:nth-child(4) .stat-num { color: var(--green); }
-    .stat-label { font-size: 0.68rem; color: var(--muted); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; }
+/* ── ABOUT SECTION ── */
+.about-section{padding:80px 0;border-top:1px solid var(--border)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:48px}
+.about-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(60,240,224,0.08);border:1px solid rgba(60,240,224,0.25);border-radius:20px;font-size:0.7rem;font-family:'Space Mono',monospace;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+.about-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+.about-title span{color:var(--yellow)}
+.about-body{font-size:0.95rem;color:#a0a0c0;line-height:1.8;margin-bottom:24px}
+.about-body strong{color:var(--white)}
+.about-values{display:flex;flex-direction:column;gap:12px}
+.value-item{display:flex;align-items:flex-start;gap:14px;padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;transition:border-color 0.2s}
+.value-item:hover{border-color:rgba(245,230,66,0.3)}
+.value-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px}
+.value-text h4{font-size:0.88rem;font-weight:800;margin-bottom:4px}
+.value-text p{font-size:0.78rem;color:var(--muted);line-height:1.5}
+.about-twitter{display:flex;align-items:center;gap:12px;margin-top:28px;padding:18px 20px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:14px;text-decoration:none;color:inherit;transition:all 0.2s}
+.about-twitter:hover{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.06)}
+.twitter-icon{width:36px;height:36px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.twitter-icon svg{width:18px;height:18px;fill:white}
+.twitter-info{flex:1}
+.twitter-handle{font-size:0.9rem;font-weight:800}
+.twitter-follow{font-size:0.72rem;color:var(--muted);font-family:'Space Mono',monospace}
+.twitter-arrow{color:var(--muted);font-size:1rem}
 
-    /* ── SECTION TITLE ── */
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
-    .section-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .section-tag {
-      font-size: 0.7rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      background: var(--border);
-      padding: 5px 12px;
-      border-radius: 20px;
-      letter-spacing: 1px;
-    }
+/* ── ROADMAP SECTION ── */
+.roadmap-section{padding:80px 0;border-top:1px solid var(--border)}
+.roadmap-timeline{position:relative;margin-top:48px;padding-left:40px}
+.roadmap-timeline::before{content:'';position:absolute;left:16px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--yellow),var(--pink),var(--cyan),var(--purple));opacity:0.4}
+.roadmap-item{position:relative;margin-bottom:40px}
+.roadmap-item:last-child{margin-bottom:0}
+.roadmap-dot{position:absolute;left:-32px;top:6px;width:16px;height:16px;border-radius:50%;border:2px solid currentColor;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.roadmap-dot::after{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.roadmap-item.done .roadmap-dot{background:var(--yellow);border-color:var(--yellow)}
+.roadmap-item.done .roadmap-dot::after{background:var(--bg)}
+.roadmap-item.active-phase .roadmap-dot{border-color:var(--orange);animation:pulseDot 2s ease-in-out infinite}
+.roadmap-item.active-phase .roadmap-dot::after{background:var(--orange)}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(255,107,53,0.4)}50%{box-shadow:0 0 0 8px rgba(255,107,53,0)}}
+.roadmap-item.upcoming .roadmap-dot{border-color:var(--muted)}
+.roadmap-item.upcoming .roadmap-dot::after{background:var(--muted)}
+.roadmap-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:transform 0.2s,border-color 0.2s}
+.roadmap-card:hover{transform:translateX(4px);border-color:rgba(255,255,255,0.1)}
+.roadmap-item.done .roadmap-card{border-color:rgba(245,230,66,0.2)}
+.roadmap-item.active-phase .roadmap-card{border-color:rgba(255,107,53,0.3);background:rgba(255,107,53,0.04)}
+.roadmap-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:gap}
+.roadmap-phase{font-size:0.7rem;font-family:'Space Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+.roadmap-status{font-size:0.65rem;font-family:'Space Mono',monospace;padding:4px 12px;border-radius:20px;font-weight:700;letter-spacing:0.5px}
+.status-done{background:rgba(245,230,66,0.12);color:var(--yellow);border:1px solid rgba(245,230,66,0.3)}
+.status-active{background:rgba(255,107,53,0.12);color:var(--orange);border:1px solid rgba(255,107,53,0.3)}
+.status-soon{background:rgba(107,107,138,0.12);color:var(--muted);border:1px solid rgba(107,107,138,0.3)}
+.roadmap-title{font-size:1.15rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px}
+.roadmap-desc{font-size:0.85rem;color:#a0a0c0;line-height:1.65;margin-bottom:16px}
+.roadmap-milestones{display:flex;flex-direction:column;gap:6px}
+.milestone{display:flex;align-items:center;gap:10px;font-size:0.82rem;color:#c0c0d8}
+.milestone-check{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;flex-shrink:0}
+.milestone.done-m .milestone-check{background:rgba(245,230,66,0.15);color:var(--yellow)}
+.milestone.active-m .milestone-check{background:rgba(255,107,53,0.15);color:var(--orange)}
+.milestone.pending-m .milestone-check{background:rgba(107,107,138,0.1);color:var(--muted)}
 
-    /* ── MAIN GRID ── */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 24px;
-      padding: 40px 0 60px;
-    }
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:40px 0;margin-top:20px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.footer-left{}
+.footer-copy{font-size:0.72rem;color:var(--muted);margin-bottom:8px}
+.footer-tagline{font-size:0.78rem;color:#888;max-width:300px;line-height:1.5}
+.footer-right{}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.footer-links a{font-size:0.72rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-links a:hover{color:var(--cyan)}
+.footer-twitter{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--muted);font-size:0.72rem;font-family:'Space Mono',monospace;transition:all 0.2s}
+.footer-twitter:hover{color:var(--white);border-color:rgba(255,255,255,0.25)}
+.footer-twitter svg{width:12px;height:12px;fill:currentColor}
 
-    /* FEED */
-    .feed { display: flex; flex-direction: column; gap: 16px; }
-
-    .post-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.2s, border-color 0.2s;
-      animation: fadeUp 0.5s ease both;
-    }
-    .post-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.12); }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .post-card:nth-child(1) { animation-delay: 0.05s; }
-    .post-card:nth-child(2) { animation-delay: 0.1s; }
-    .post-card:nth-child(3) { animation-delay: 0.15s; }
-    .post-card:nth-child(4) { animation-delay: 0.2s; }
-    .post-card:nth-child(5) { animation-delay: 0.25s; }
-
-    .post-accent {
-      position: absolute;
-      top: 0; left: 0;
-      width: 3px;
-      height: 100%;
-      border-radius: 3px 0 0 3px;
-    }
-
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-    .avatar {
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-    .post-meta { flex: 1; }
-    .post-author { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; }
-    .post-time { font-size: 0.68rem; font-family: 'Space Mono', monospace; color: var(--muted); }
-    .post-badge {
-      font-size: 0.62rem;
-      font-family: 'Space Mono', monospace;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .post-content {
-      font-size: 0.92rem;
-      line-height: 1.65;
-      color: #c8c8e0;
-      margin-bottom: 16px;
-    }
-    .post-content .tag { color: var(--cyan); font-weight: 700; }
-    .post-content .mention { color: var(--pink); font-weight: 700; }
-    .post-content .highlight { color: var(--yellow); font-weight: 700; }
-
-    .post-chain {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.68rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-    .chain-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-    .post-footer {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
-    }
-    .reaction-btn {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.75rem;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .reaction-btn:hover { border-color: var(--yellow); color: var(--yellow); background: rgba(245,230,66,0.06); }
-    .reaction-btn.active { border-color: var(--orange); color: var(--orange); background: rgba(255,107,53,0.08); }
-    .post-share {
-      margin-left: auto;
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .post-share:hover { color: var(--cyan); border-color: var(--cyan); }
-
-    /* COMPOSE BAR */
-    .compose-bar {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      margin-bottom: 16px;
-      transition: border-color 0.2s;
-    }
-    .compose-bar:focus-within { border-color: var(--yellow); }
-    .compose-avatar {
-      width: 38px; height: 38px;
-      background: linear-gradient(135deg, var(--orange), var(--pink));
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-    .compose-input {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--white);
-      font-family: 'Syne', sans-serif;
-      font-size: 0.9rem;
-      resize: none;
-      outline: none;
-      padding-top: 6px;
-      min-height: 60px;
-    }
-    .compose-input::placeholder { color: var(--muted); }
-    .compose-actions { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-    .compose-tag-btn {
-      padding: 6px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      font-size: 0.78rem;
-      cursor: pointer;
-      font-family: 'Space Mono', monospace;
-      transition: all 0.15s;
-    }
-    .compose-tag-btn:hover { color: var(--cyan); border-color: var(--cyan); }
-    .compose-submit {
-      margin-left: auto;
-      padding: 8px 20px;
-      background: var(--yellow);
-      color: var(--bg);
-      font-weight: 800;
-      font-size: 0.8rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Syne', sans-serif;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .compose-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,230,66,0.3); }
-
-    /* ── SIDEBAR ── */
-    .sidebar { display: flex; flex-direction: column; gap: 16px; }
-
-    .side-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      animation: fadeUp 0.5s ease both;
-    }
-    .side-card:nth-child(1) { animation-delay: 0.15s; }
-    .side-card:nth-child(2) { animation-delay: 0.2s; }
-    .side-card:nth-child(3) { animation-delay: 0.25s; }
-    .side-card-title {
-      font-size: 0.78rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 16px;
-    }
-
-    /* STREAK BOARD */
-    .streak-list { display: flex; flex-direction: column; gap: 10px; }
-    .streak-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .streak-rank {
-      width: 22px;
-      font-size: 0.7rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      text-align: center;
-      flex-shrink: 0;
-    }
-    .streak-rank.top { color: var(--yellow); font-weight: 700; }
-    .streak-avatar {
-      width: 34px; height: 34px;
-      border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .streak-info { flex: 1; }
-    .streak-name { font-size: 0.82rem; font-weight: 700; }
-    .streak-days { font-size: 0.65rem; font-family: 'Space Mono', monospace; color: var(--muted); }
-    .streak-fire {
-      font-size: 0.8rem;
-      font-family: 'Space Mono', monospace;
-      font-weight: 700;
-    }
-
-    /* TRENDING TOPICS */
-    .topic-list { display: flex; flex-direction: column; gap: 8px; }
-    .topic-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .topic-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); }
-    .topic-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-    }
-    .topic-count {
-      font-size: 0.65rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-    }
-
-    /* CHAIN FILTER */
-    .chain-filter { display: flex; flex-direction: column; gap: 8px; }
-    .chain-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.15s;
-    }
-    .chain-item:hover { background: rgba(255,255,255,0.04); border-color: var(--border); }
-    .chain-item.active { background: rgba(245,230,66,0.07); border-color: rgba(245,230,66,0.3); }
-    .chain-left { display: flex; align-items: center; gap: 10px; }
-    .chain-logo { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-    .chain-name { font-size: 0.82rem; font-weight: 700; }
-    .chain-posts { font-size: 0.65rem; font-family: 'Space Mono', monospace; color: var(--muted); }
-
-    /* TICKER */
-    .ticker-wrap {
-      overflow: hidden;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 0;
-      margin-top: 0;
-      position: relative;
-      z-index: 10;
-    }
-    .ticker-wrap::before,
-    .ticker-wrap::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 80px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .ticker-wrap::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
-    .ticker-wrap::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
-    .ticker-track {
-      display: flex;
-      width: max-content;
-      animation: ticker 35s linear infinite;
-    }
-    .ticker-track:hover { animation-play-state: paused; }
-    .ticker-set {
-      display: flex;
-      gap: 0;
-    }
-    @keyframes ticker {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .ticker-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      padding: 0 28px;
-      border-right: 1px solid var(--border);
-    }
-    .ticker-item .up { color: var(--green); }
-    .ticker-item .down { color: var(--pink); }
-    .ticker-sym { color: var(--white); font-weight: 700; }
-    .ticker-sep { color: var(--border); padding: 0 4px; }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-      margin-top: 20px;
-    }
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .footer-copy {
-      font-size: 0.72rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-    }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a {
-      font-size: 0.72rem;
-      font-family: 'Space Mono', monospace;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .footer-links a:hover { color: var(--cyan); }
-
-    /* FILTER TABS */
-    .filter-tabs {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 20px;
-    }
-    .filter-tab {
-      padding: 8px 18px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: none;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      font-family: 'Syne', sans-serif;
-      cursor: pointer;
-      transition: all 0.15s;
-      letter-spacing: 0.3px;
-    }
-    .filter-tab:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
-    .filter-tab.active { background: var(--yellow); color: var(--bg); border-color: var(--yellow); }
-
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; gap: 40px; }
-      .stats-strip { display: none; }
-      .main-grid { grid-template-columns: 1fr; }
-      .sidebar { display: none; }
-      nav { display: none; }
-    }
-  </style>
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:40px}
+  .stats-strip{display:none}
+  .main-grid{grid-template-columns:1fr}
+  .sidebar{display:none}
+  nav{display:none}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .roadmap-timeline{padding-left:28px}
+}
+</style>
 </head>
 <body>
-
 <div class="bg-blobs">
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
@@ -695,20 +297,26 @@
 <!-- HEADER -->
 <header>
   <div class="wrapper header-inner">
-    <div class="logo">
+    <a class="logo" href="#">
       <div class="logo-icon">⛓️</div>
       <div>
         <div class="logo-text"><span>Onchain</span>DailyPosting</div>
         <div class="logo-sub">Community Hub · ID</div>
       </div>
-    </div>
+    </a>
     <nav>
-      <a href="#" class="active">Feed</a>
-      <a href="#">Explore</a>
-      <a href="#">Leaderboard</a>
-      <a href="#">Learn</a>
+      <a href="#feed" class="active">Feed</a>
+      <a href="#badges">Badges</a>
+      <a href="#about">About</a>
+      <a href="#roadmap">Roadmap</a>
     </nav>
-    <button class="header-cta">🔥 Post Sekarang</button>
+    <div class="header-right">
+      <a href="https://twitter.com/onchaindailyposting" target="_blank" class="twitter-btn">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        @onchaindailyposting
+      </a>
+      <button class="header-cta">🔥 Post Sekarang</button>
+    </div>
   </div>
 </header>
 
@@ -730,42 +338,26 @@
         <span class="line-yellow">build onchain,</span>
         <span class="line-stroke">grow together.</span>
       </h1>
-      <p class="hero-desc">
-        Komunitas builder & trader Indonesia yang konsisten posting aktivitas onchain setiap hari. Share alpha, track wallet, dan grow bersama.
-      </p>
+      <p class="hero-desc">Komunitas builder &amp; trader Indonesia yang konsisten posting aktivitas onchain setiap hari. Share alpha, track wallet, dan grow bersama.</p>
       <div class="hero-actions">
         <button class="btn-primary">🚀 Mulai Posting</button>
-        <button class="btn-ghost">Explore Feed →</button>
+        <button class="btn-ghost" onclick="document.getElementById('feed').scrollIntoView({behavior:'smooth'})">Explore Feed →</button>
       </div>
     </div>
     <div class="stats-strip">
-      <div class="stat-card">
-        <span class="stat-num">2.4K</span>
-        <span class="stat-label">Members</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num">18.7K</span>
-        <span class="stat-label">Total Posts</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num">312</span>
-        <span class="stat-label">Today</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-num">97%</span>
-        <span class="stat-label">Streak Rate</span>
-      </div>
+      <div class="stat-card"><span class="stat-num">2.4K</span><span class="stat-label">Members</span></div>
+      <div class="stat-card"><span class="stat-num">18.7K</span><span class="stat-label">Total Posts</span></div>
+      <div class="stat-card"><span class="stat-num">312</span><span class="stat-label">Today</span></div>
+      <div class="stat-card"><span class="stat-num">97%</span><span class="stat-label">Streak Rate</span></div>
     </div>
   </div>
 </div>
 
 <!-- MAIN CONTENT -->
-<div class="wrapper">
+<div class="wrapper" id="feed">
   <div class="main-grid">
-
     <!-- FEED COLUMN -->
     <div>
-      <!-- COMPOSE -->
       <div class="compose-bar">
         <div class="compose-avatar">🔥</div>
         <div style="flex:1">
@@ -778,184 +370,339 @@
           </div>
         </div>
       </div>
-
-      <!-- FILTER TABS -->
       <div class="filter-tabs">
-        <button class="filter-tab active">Terbaru</button>
-        <button class="filter-tab">🔥 Trending</button>
-        <button class="filter-tab">⛓️ Base</button>
-        <button class="filter-tab">Ξ Ethereum</button>
-        <button class="filter-tab">◎ Solana</button>
+        <button class="filter-tab active" onclick="setTab(this)">Terbaru</button>
+        <button class="filter-tab" onclick="setTab(this)">🔥 Trending</button>
+        <button class="filter-tab" onclick="setTab(this)">⛓️ Base</button>
+        <button class="filter-tab" onclick="setTab(this)">Ξ Ethereum</button>
+        <button class="filter-tab" onclick="setTab(this)">◎ Solana</button>
       </div>
-
       <div class="section-head">
         <div class="section-title">Daily Feed</div>
         <div class="section-tag">312 posts hari ini</div>
       </div>
-
-      <!-- FEED -->
-      <div class="feed" id="feed"></div>
+      <div class="feed" id="feedList"></div>
     </div>
-
     <!-- SIDEBAR -->
     <div class="sidebar">
-      <!-- STREAK LEADERBOARD -->
       <div class="side-card">
         <div class="side-card-title">🔥 Top Streakers</div>
         <div class="streak-list" id="streakList"></div>
       </div>
-
-      <!-- TRENDING TOPICS -->
       <div class="side-card">
         <div class="side-card-title">📈 Trending Topics</div>
         <div class="topic-list" id="topicList"></div>
       </div>
-
-      <!-- CHAIN FILTER -->
       <div class="side-card">
         <div class="side-card-title">⛓️ By Chain</div>
         <div class="chain-filter" id="chainList"></div>
+      </div>
+      <!-- TWITTER SIDEBAR CARD -->
+      <div class="side-card">
+        <div class="side-card-title">🐦 Follow di Twitter</div>
+        <a href="https://twitter.com/onchaindailyposting" target="_blank" style="display:flex;align-items:center;gap:12px;padding:14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:inherit;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="width:40px;height:40px;background:#000;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:0.85rem;font-weight:800">@onchaindailyposting</div>
+            <div style="font-size:0.68rem;color:var(--muted);font-family:'Space Mono',monospace">Follow untuk alpha harian</div>
+          </div>
+          <div style="color:var(--muted)">↗</div>
+        </a>
       </div>
     </div>
   </div>
 </div>
 
+<!-- ── BADGE SECTION ── -->
+<div class="wrapper" id="badges">
+  <div class="badges-section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Chain Badges 🏅</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-top:6px">Kumpulkan badge dengan aktif posting di tiap chain</p>
+      </div>
+      <div class="section-tag">3 chains aktif</div>
+    </div>
+    <div class="badges-grid" id="badgesGrid"></div>
+  </div>
+</div>
+
+<!-- ── ABOUT SECTION ── -->
+<div class="wrapper" id="about">
+  <div class="about-section">
+    <div class="about-grid">
+      <div>
+        <div class="about-tag">⛓️ Tentang Kami</div>
+        <h2 class="about-title">Komunitas builder<br><span>Indonesia</span> yang<br>konsisten.</h2>
+        <p class="about-body">
+          <strong>OnchainDailyPosting</strong> lahir dari satu kebiasaan sederhana: <strong>posting aktivitas onchain setiap hari</strong>. Bukan untuk pamer, tapi untuk membangun kebiasaan, konsistensi, dan pertumbuhan bersama.
+        </p>
+        <p class="about-body">
+          Kami percaya bahwa <strong>builder terbaik</strong> adalah mereka yang tidak berhenti belajar, berbagi, dan bergerak — satu hari, satu post, satu langkah. Di sini, kamu tidak sendirian.
+        </p>
+        <a href="https://twitter.com/onchaindailyposting" target="_blank" class="about-twitter">
+          <div class="twitter-icon">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+          </div>
+          <div class="twitter-info">
+            <div class="twitter-handle">@onchaindailyposting</div>
+            <div class="twitter-follow">Follow kami di Twitter/X</div>
+          </div>
+          <div class="twitter-arrow">↗</div>
+        </a>
+      </div>
+      <div class="about-values">
+        <div class="value-item">
+          <div class="value-icon">🔥</div>
+          <div class="value-text">
+            <h4>Konsistensi di Atas Segalanya</h4>
+            <p>Satu post setiap hari lebih bermakna dari satu post besar setahun sekali. Streak-mu adalah bukti nyata.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🤝</div>
+          <div class="value-text">
+            <h4>Tumbuh Bersama Komunitas</h4>
+            <p>Share alpha, diskusi strategi, dan support satu sama lain. Komunitas Indonesia yang solid adalah kekuatan kita.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">⛓️</div>
+          <div class="value-text">
+            <h4>Onchain = Transparan</h4>
+            <p>Semua aktivitas tercatat onchain. Tidak ada yang bisa dipalsukan — track record kamu bicara sendiri.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🌐</div>
+          <div class="value-text">
+            <h4>Multi-Chain, Satu Komunitas</h4>
+            <p>Base, Ethereum, Solana, Arbitrum — kami support semua chain. Yang penting kamu terus bergerak.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🇮🇩</div>
+          <div class="value-text">
+            <h4>Dibangun untuk Indonesia</h4>
+            <p>Web3 Indonesia punya potensi luar biasa. Kami hadir untuk memfasilitasi dan mempercepatnya.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ROADMAP SECTION ── -->
+<div class="wrapper" id="roadmap">
+  <div class="roadmap-section">
+    <div class="section-head">
+      <div>
+        <div class="section-title">Roadmap 🗺️</div>
+        <p style="font-size:0.85rem;color:var(--muted);margin-top:6px">Perjalanan membangun komunitas Web3 terbaik Indonesia</p>
+      </div>
+      <div class="section-tag">Fase 2 aktif</div>
+    </div>
+    <div class="roadmap-timeline">
+
+      <!-- FASE 1 -->
+      <div class="roadmap-item done">
+        <div class="roadmap-dot" style="color:var(--yellow)"></div>
+        <div class="roadmap-card">
+          <div class="roadmap-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span class="roadmap-phase" style="color:var(--yellow)">Fase 1 · Q1 2025</span>
+            <span class="roadmap-status status-done">✓ Selesai</span>
+          </div>
+          <div class="roadmap-title">Fondasi & Launch 🚀</div>
+          <div class="roadmap-desc">Membangun fondasi komunitas, infrastruktur, dan meluncurkan platform pertama untuk komunitas builder Indonesia.</div>
+          <div class="roadmap-milestones">
+            <div class="milestone done-m"><div class="milestone-check">✓</div>Launch website & community hub</div>
+            <div class="milestone done-m"><div class="milestone-check">✓</div>Setup Telegram community channel</div>
+            <div class="milestone done-m"><div class="milestone-check">✓</div>Crypto ticker & live feed</div>
+            <div class="milestone done-m"><div class="milestone-check">✓</div>100 member pertama bergabung</div>
+            <div class="milestone done-m"><div class="milestone-check">✓</div>Streak leaderboard & tracking</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 2 -->
+      <div class="roadmap-item active-phase">
+        <div class="roadmap-dot" style="color:var(--orange)"></div>
+        <div class="roadmap-card">
+          <div class="roadmap-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span class="roadmap-phase" style="color:var(--orange)">Fase 2 · Q2 2025</span>
+            <span class="roadmap-status status-active">⚡ Sedang Berjalan</span>
+          </div>
+          <div class="roadmap-title">Chain Badges & Engagement 🏅</div>
+          <div class="roadmap-desc">Meluncurkan sistem badge berbasis chain activity, meningkatkan engagement, dan membangun fitur sosial yang lebih dalam.</div>
+          <div class="roadmap-milestones">
+            <div class="milestone done-m"><div class="milestone-check">✓</div>Chain-based badge system (Base, ETH, SOL)</div>
+            <div class="milestone done-m"><div class="milestone-check">✓</div>About & Roadmap page</div>
+            <div class="milestone active-m"><div class="milestone-check">→</div>Twitter/X integration & auto-posting</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Wallet connect & onchain verification</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>1,000 member milestone</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 3 -->
+      <div class="roadmap-item upcoming">
+        <div class="roadmap-dot" style="color:var(--cyan)"></div>
+        <div class="roadmap-card">
+          <div class="roadmap-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span class="roadmap-phase" style="color:var(--cyan)">Fase 3 · Q3 2025</span>
+            <span class="roadmap-status status-soon">Segera</span>
+          </div>
+          <div class="roadmap-title">DeFi Analytics & AI Agent 🤖</div>
+          <div class="roadmap-desc">Integrasi tools analitik DeFi real-time, AI agent untuk market insights, dan fitur whale tracking untuk komunitas.</div>
+          <div class="roadmap-milestones">
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Real-time DeFi portfolio tracker</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>AI market insight agent (powered by Claude)</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Whale wallet monitoring & alerts</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Farcaster & Lens integration</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Mobile app (Android first)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FASE 4 -->
+      <div class="roadmap-item upcoming">
+        <div class="roadmap-dot" style="color:var(--purple)"></div>
+        <div class="roadmap-card">
+          <div class="roadmap-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span class="roadmap-phase" style="color:var(--purple)">Fase 4 · Q4 2025</span>
+            <span class="roadmap-status status-soon">Coming Soon</span>
+          </div>
+          <div class="roadmap-title">Token & DAO Governance 🗳️</div>
+          <div class="roadmap-desc">Meluncurkan token komunitas, sistem reward untuk kontributor aktif, dan transisi ke governance berbasis DAO.</div>
+          <div class="roadmap-milestones">
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Community token launch di Base</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Reward system untuk top streakers</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>DAO voting untuk fitur baru</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>Partnership dengan protokol DeFi Indonesia</div>
+            <div class="milestone pending-m"><div class="milestone-check">○</div>10,000 member milestone 🎯</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
 <footer>
   <div class="wrapper footer-inner">
-    <div class="footer-copy">© 2025 OnchainDailyPosting · Built for ID Web3 Community</div>
-    <div class="footer-links">
-      <a href="#">Telegram</a>
-      <a href="#">Farcaster</a>
-      <a href="#">Twitter/X</a>
-      <a href="#">About</a>
+    <div class="footer-left">
+      <div class="footer-copy">© 2025 OnchainDailyPosting · Built for ID Web3 Community</div>
+      <div class="footer-tagline">Post setiap hari, build onchain, grow together. 🇮🇩</div>
+    </div>
+    <div class="footer-right">
+      <div class="footer-links">
+        <a href="https://t.me/onchaindailyposting" target="_blank">Telegram</a>
+        <a href="#" target="_blank">Farcaster</a>
+        <a href="https://twitter.com/onchaindailyposting" target="_blank">Twitter/X</a>
+        <a href="#about">About</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#badges">Badges</a>
+      </div>
+      <a href="https://twitter.com/onchaindailyposting" target="_blank" class="footer-twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+        @onchaindailyposting
+      </a>
     </div>
   </div>
 </footer>
 
 <script>
-// ── DATA ──
+// DATA
 const posts = [
-  {
-    author: "moontrader.eth",
-    avatar: "🌙",
-    avatarBg: "linear-gradient(135deg,#ff6b35,#ff3cac)",
-    time: "2 menit lalu",
-    badge: "Alpha 🔥",
-    badgeColor: "#ff6b35",
-    badgeBg: "rgba(255,107,53,0.15)",
-    accentColor: "#ff6b35",
-    chain: "Base",
-    chainColor: "#3cf0e0",
-    content: `Baru swap <span class="highlight">12 ETH → USDC</span> di Uniswap V4 tadi. Gas fee-nya gila murah pakai <span class="tag">#Base</span> — cuma $0.002! 🤯 <span class="mention">@defilover.eth</span> kamu harus coba chain ini sekarang. Setup position dulu sebelum pump.`,
-    likes: 48, comments: 12, recasts: 7, accentClass: "orange"
-  },
-  {
-    author: "whalehunter.eth",
-    avatar: "🐋",
-    avatarBg: "linear-gradient(135deg,#9b5de5,#3cf0e0)",
-    time: "15 menit lalu",
-    badge: "Whale Watch 👁️",
-    badgeColor: "#9b5de5",
-    badgeBg: "rgba(155,93,229,0.15)",
-    accentColor: "#9b5de5",
-    chain: "Ethereum",
-    chainColor: "#9b5de5",
-    content: `Wallet <span class="highlight">0x7f2a...9d3e</span> baru pindahin <span class="highlight">500 ETH</span> ke Binance. Biasanya ini tanda mau dump. Monitor terus ya! Track di <span class="tag">#Arkham</span> kalau mau live update. Ini udah hari ke-<span class="highlight">47 streak</span> gue posting. 💪`,
-    likes: 112, comments: 34, recasts: 28, accentClass: "purple"
-  },
-  {
-    author: "defilover.eth",
-    avatar: "⚡",
-    avatarBg: "linear-gradient(135deg,#f5e642,#ff6b35)",
-    time: "32 menit lalu",
-    badge: "DeFi 💎",
-    badgeColor: "#f5e642",
-    badgeBg: "rgba(245,230,66,0.12)",
-    accentColor: "#f5e642",
-    chain: "Arbitrum",
-    chainColor: "#28a0f0",
-    content: `LP position gue di <span class="tag">#GMX</span> udah generate <span class="highlight">0.8 ETH</span> dalam 30 hari. Strategi: masuk saat volatilitas tinggi, ambil fee, keluar sebelum range keluar. Post hari ini sebagai bagian dari <span class="tag">#onchaindailyposting</span> challenge!`,
-    likes: 67, comments: 19, recasts: 15
-  },
-  {
-    author: "nftbuilder.eth",
-    avatar: "🎨",
-    avatarBg: "linear-gradient(135deg,#ff3cac,#9b5de5)",
-    time: "1 jam lalu",
-    badge: "Builder 🛠️",
-    badgeColor: "#ff3cac",
-    badgeBg: "rgba(255,60,172,0.12)",
-    accentColor: "#ff3cac",
-    chain: "Base",
-    chainColor: "#3cf0e0",
-    content: `Deploy smart contract pertama gue di <span class="tag">#Base</span> hari ini! Simple ERC-721 tapi ini milestone besar buat gue. Thanks komunitas <span class="mention">@onchaindailyposting</span> yang udah support. Hari ke-<span class="highlight">23</span> dan makin semangat! 🔥`,
-    likes: 89, comments: 41, recasts: 22
-  },
-  {
-    author: "cryptomom.eth",
-    avatar: "🌸",
-    avatarBg: "linear-gradient(135deg,#4dff91,#3cf0e0)",
-    time: "2 jam lalu",
-    badge: "Newbie 🌱",
-    badgeColor: "#4dff91",
-    badgeBg: "rgba(77,255,145,0.12)",
-    accentColor: "#4dff91",
-    chain: "Solana",
-    chainColor: "#9945ff",
-    content: `Akhirnya berhasil pakai <span class="tag">#Phantom</span> Wallet sendiri tanpa bantuan! Swap pertama di <span class="tag">#Jupiter</span> sukses 🎉. Terima kasih semua yang udah jelasin step by step di channel Telegram. Hari ke-5 dan baru belajar, semangat terus!`,
-    likes: 134, comments: 56, recasts: 31
-  }
+  { author:"moontrader.eth", avatar:"🌙", avatarBg:"linear-gradient(135deg,#ff6b35,#ff3cac)", time:"2 menit lalu", badge:"Alpha 🔥", badgeColor:"#ff6b35", badgeBg:"rgba(255,107,53,0.15)", accentColor:"#ff6b35", chain:"Base", chainColor:"#3cf0e0", content:`Baru swap <span class="highlight">12 ETH → USDC</span> di Uniswap V4 tadi. Gas fee-nya gila murah pakai <span class="tag">#Base</span> — cuma $0.002! 🤯 <span class="mention">@defilover.eth</span> kamu harus coba chain ini sekarang.`, likes:48, comments:12, recasts:7 },
+  { author:"whalehunter.eth", avatar:"🐋", avatarBg:"linear-gradient(135deg,#9b5de5,#3cf0e0)", time:"15 menit lalu", badge:"Whale Watch 👁️", badgeColor:"#9b5de5", badgeBg:"rgba(155,93,229,0.15)", accentColor:"#9b5de5", chain:"Ethereum", chainColor:"#9b5de5", content:`Wallet <span class="highlight">0x7f2a...9d3e</span> baru pindahin <span class="highlight">500 ETH</span> ke Binance. Biasanya ini tanda mau dump. Monitor terus ya! Ini udah hari ke-<span class="highlight">47 streak</span> gue posting. 💪`, likes:112, comments:34, recasts:28 },
+  { author:"defilover.eth", avatar:"⚡", avatarBg:"linear-gradient(135deg,#f5e642,#ff6b35)", time:"32 menit lalu", badge:"DeFi 💎", badgeColor:"#f5e642", badgeBg:"rgba(245,230,66,0.12)", accentColor:"#f5e642", chain:"Arbitrum", chainColor:"#28a0f0", content:`LP position gue di <span class="tag">#GMX</span> udah generate <span class="highlight">0.8 ETH</span> dalam 30 hari. Strategi: masuk saat volatilitas tinggi, ambil fee, keluar sebelum range keluar. <span class="tag">#onchaindailyposting</span>`, likes:67, comments:19, recasts:15 },
+  { author:"nftbuilder.eth", avatar:"🎨", avatarBg:"linear-gradient(135deg,#ff3cac,#9b5de5)", time:"1 jam lalu", badge:"Builder 🛠️", badgeColor:"#ff3cac", badgeBg:"rgba(255,60,172,0.12)", accentColor:"#ff3cac", chain:"Base", chainColor:"#3cf0e0", content:`Deploy smart contract pertama gue di <span class="tag">#Base</span> hari ini! Simple ERC-721 tapi ini milestone besar buat gue. Thanks komunitas <span class="mention">@onchaindailyposting</span>. Hari ke-<span class="highlight">23</span>! 🔥`, likes:89, comments:41, recasts:22 },
+  { author:"cryptomom.eth", avatar:"🌸", avatarBg:"linear-gradient(135deg,#4dff91,#3cf0e0)", time:"2 jam lalu", badge:"Newbie 🌱", badgeColor:"#4dff91", badgeBg:"rgba(77,255,145,0.12)", accentColor:"#4dff91", chain:"Solana", chainColor:"#9945ff", content:`Akhirnya berhasil pakai <span class="tag">#Phantom</span> Wallet sendiri tanpa bantuan! Swap pertama di <span class="tag">#Jupiter</span> sukses 🎉. Hari ke-<span class="highlight">5</span> dan baru belajar, semangat terus!`, likes:134, comments:56, recasts:31 },
 ];
 
 const streakers = [
-  { rank: "1", emoji: "🌙", name: "moontrader.eth", bg: "linear-gradient(135deg,#ff6b35,#ff3cac)", days: "47 hari streak", fire: "🔥×47", color: "#ff6b35" },
-  { rank: "2", emoji: "🐋", name: "whalehunter.eth", bg: "linear-gradient(135deg,#9b5de5,#3cf0e0)", days: "38 hari streak", fire: "🔥×38", color: "#9b5de5" },
-  { rank: "3", emoji: "⚡", name: "defilover.eth", bg: "linear-gradient(135deg,#f5e642,#ff6b35)", days: "31 hari streak", fire: "🔥×31", color: "#f5e642" },
-  { rank: "4", emoji: "🎨", name: "nftbuilder.eth", bg: "linear-gradient(135deg,#ff3cac,#9b5de5)", days: "23 hari streak", fire: "🔥×23", color: "#ff3cac" },
-  { rank: "5", emoji: "🌸", name: "cryptomom.eth", bg: "linear-gradient(135deg,#4dff91,#3cf0e0)", days: "5 hari streak", fire: "🔥×5", color: "#4dff91" },
+  { rank:"1", emoji:"🌙", name:"moontrader.eth", bg:"linear-gradient(135deg,#ff6b35,#ff3cac)", days:"47 hari streak", fire:"🔥×47", color:"#ff6b35" },
+  { rank:"2", emoji:"🐋", name:"whalehunter.eth", bg:"linear-gradient(135deg,#9b5de5,#3cf0e0)", days:"38 hari streak", fire:"🔥×38", color:"#9b5de5" },
+  { rank:"3", emoji:"⚡", name:"defilover.eth", bg:"linear-gradient(135deg,#f5e642,#ff6b35)", days:"31 hari streak", fire:"🔥×31", color:"#f5e642" },
+  { rank:"4", emoji:"🎨", name:"nftbuilder.eth", bg:"linear-gradient(135deg,#ff3cac,#9b5de5)", days:"23 hari streak", fire:"🔥×23", color:"#ff3cac" },
+  { rank:"5", emoji:"🌸", name:"cryptomom.eth", bg:"linear-gradient(135deg,#4dff91,#3cf0e0)", days:"5 hari streak", fire:"🔥×5", color:"#4dff91" },
 ];
 
 const topics = [
-  { name: "#onchaindailyposting", count: "312 posts", color: "#f5e642" },
-  { name: "#base", count: "189 posts", color: "#3cf0e0" },
-  { name: "#ethereum", count: "#147 posts", color: "#9b5de5" },
-  { name: "#defi", count: "98 posts", color: "#ff6b35" },
-  { name: "#nft", count: "76 posts", color: "#ff3cac" },
+  { name:"#onchaindailyposting", count:"312 posts", color:"#f5e642" },
+  { name:"#base", count:"189 posts", color:"#3cf0e0" },
+  { name:"#ethereum", count:"147 posts", color:"#9b5de5" },
+  { name:"#defi", count:"98 posts", color:"#ff6b35" },
+  { name:"#nft", count:"76 posts", color:"#ff3cac" },
 ];
 
 const chains = [
-  { logo: "🔵", name: "Base", posts: "189 posts", color: "#3cf0e0", active: true },
-  { logo: "Ξ", name: "Ethereum", posts: "147 posts", color: "#9b5de5" },
-  { logo: "◎", name: "Solana", posts: "88 posts", color: "#9945ff" },
-  { logo: "🔺", name: "Arbitrum", posts: "54 posts", color: "#28a0f0" },
-  { logo: "🟣", name: "Polygon", posts: "33 posts", color: "#8247e5" },
+  { logo:"🔵", name:"Base", posts:"189 posts", color:"#3cf0e0", active:true },
+  { logo:"Ξ", name:"Ethereum", posts:"147 posts", color:"#9b5de5" },
+  { logo:"◎", name:"Solana", posts:"88 posts", color:"#9945ff" },
+  { logo:"🔺", name:"Arbitrum", posts:"54 posts", color:"#28a0f0" },
+  { logo:"🟣", name:"Polygon", posts:"33 posts", color:"#8247e5" },
 ];
 
 const tickers = [
-  { sym: "ETH", price: "$3,842", change: "+2.4%", up: true },
-  { sym: "BTC", price: "$67,210", change: "+1.1%", up: true },
-  { sym: "SOL", price: "$182.50", change: "-0.8%", up: false },
-  { sym: "BASE GAS", price: "$0.002", change: "-12%", up: true },
-  { sym: "ARB", price: "$1.24", change: "+5.2%", up: true },
-  { sym: "OP", price: "$2.87", change: "-1.3%", up: false },
+  { sym:"ETH", price:"$3,842", change:"+2.4%", up:true },
+  { sym:"BTC", price:"$67,210", change:"+1.1%", up:true },
+  { sym:"SOL", price:"$182.50", change:"-0.8%", up:false },
+  { sym:"BASE GAS", price:"$0.002", change:"-12%", up:true },
+  { sym:"ARB", price:"$1.24", change:"+5.2%", up:true },
+  { sym:"OP", price:"$2.87", change:"-1.3%", up:false },
 ];
 
-// ── RENDER ──
+const badges = [
+  {
+    chain:"base", icon:"🔵", name:"Base Builder",
+    tiers:[
+      { label:"Newcomer", desc:"1 post di Base", req:"1 post", earned:true },
+      { label:"Regular", desc:"7 hari berturut-turut di Base", req:"7-day streak", earned:true },
+      { label:"OG Builder", desc:"30 post di Base chain", req:"30 posts", earned:false },
+      { label:"Base Native", desc:"100 post di Base chain", req:"100 posts", earned:false },
+    ]
+  },
+  {
+    chain:"eth", icon:"Ξ", name:"ETH Maxi",
+    tiers:[
+      { label:"Newcomer", desc:"1 post di Ethereum", req:"1 post", earned:true },
+      { label:"Gas Survivor", desc:"5 post di ETH mainnet", req:"5 posts", earned:true },
+      { label:"DeFi Degen", desc:"20 post di Ethereum", req:"20 posts", earned:false },
+      { label:"ETH OG", desc:"50 post di Ethereum", req:"50 posts", earned:false },
+    ]
+  },
+  {
+    chain:"sol", icon:"◎", name:"SOL Surfer",
+    tiers:[
+      { label:"Newcomer", desc:"1 post di Solana", req:"1 post", earned:true },
+      { label:"Speed Runner", desc:"5 post di Solana", req:"5 posts", earned:false },
+      { label:"SOL Native", desc:"20 post di Solana", req:"20 posts", earned:false },
+      { label:"Saga Legend", desc:"50 post di Solana", req:"50 posts", earned:false },
+    ]
+  },
+];
+
+// RENDER TICKER
 function renderTicker() {
   const makeItems = () => tickers.map(t => `
     <span class="ticker-item">
       <span class="ticker-sym">${t.sym}</span>
       <span>${t.price}</span>
-      <span class="${t.up ? 'up' : 'down'}">${t.change}</span>
+      <span class="${t.up?'up':'down'}">${t.change}</span>
     </span>
   `).join('');
   document.getElementById('tickerSet1').innerHTML = makeItems();
   document.getElementById('tickerSet2').innerHTML = makeItems();
 }
 
+// RENDER FEED
 function renderFeed() {
-  const feed = document.getElementById('feed');
-  feed.innerHTML = posts.map((p, i) => `
+  document.getElementById('feedList').innerHTML = posts.map((p,i) => `
     <div class="post-card" style="animation-delay:${i*0.07}s">
       <div class="post-accent" style="background:${p.accentColor}"></div>
       <div class="post-header">
@@ -967,12 +714,9 @@ function renderFeed() {
         <div class="post-badge" style="color:${p.badgeColor};background:${p.badgeBg}">${p.badge}</div>
       </div>
       <div class="post-content">${p.content}</div>
-      <div class="post-chain">
-        <div class="chain-dot" style="background:${p.chainColor}"></div>
-        ${p.chain}
-      </div>
+      <div class="post-chain"><div class="chain-dot" style="background:${p.chainColor}"></div>${p.chain}</div>
       <div class="post-footer">
-        <button class="reaction-btn" onclick="like(this)">❤️ ${p.likes}</button>
+        <button class="reaction-btn" onclick="this.classList.toggle('active')">❤️ ${p.likes}</button>
         <button class="reaction-btn">💬 ${p.comments}</button>
         <button class="reaction-btn">🔁 ${p.recasts}</button>
         <button class="post-share">↗ Share</button>
@@ -981,11 +725,11 @@ function renderFeed() {
   `).join('');
 }
 
+// RENDER STREAKERS
 function renderStreakers() {
-  const el = document.getElementById('streakList');
-  el.innerHTML = streakers.map(s => `
+  document.getElementById('streakList').innerHTML = streakers.map(s => `
     <div class="streak-item">
-      <div class="streak-rank ${parseInt(s.rank) <= 3 ? 'top' : ''}">#${s.rank}</div>
+      <div class="streak-rank ${parseInt(s.rank)<=3?'top':''}">#${s.rank}</div>
       <div class="streak-avatar" style="background:${s.bg}">${s.emoji}</div>
       <div class="streak-info">
         <div class="streak-name">${s.name}</div>
@@ -996,9 +740,9 @@ function renderStreakers() {
   `).join('');
 }
 
+// RENDER TOPICS
 function renderTopics() {
-  const el = document.getElementById('topicList');
-  el.innerHTML = topics.map(t => `
+  document.getElementById('topicList').innerHTML = topics.map(t => `
     <div class="topic-item">
       <div class="topic-name" style="color:${t.color}">${t.name}</div>
       <div class="topic-count">${t.count}</div>
@@ -1006,43 +750,55 @@ function renderTopics() {
   `).join('');
 }
 
+// RENDER CHAINS
 function renderChains() {
-  const el = document.getElementById('chainList');
-  el.innerHTML = chains.map(c => `
-    <div class="chain-item ${c.active ? 'active' : ''}" onclick="selectChain(this)">
+  document.getElementById('chainList').innerHTML = chains.map(c => `
+    <div class="chain-item ${c.active?'active':''}" onclick="this.parentElement.querySelectorAll('.chain-item').forEach(x=>x.classList.remove('active'));this.classList.add('active')">
       <div class="chain-left">
-        <div class="chain-logo" style="background:rgba(255,255,255,0.06)">${c.logo}</div>
-        <div class="chain-name" style="color:${c.color}">${c.name}</div>
+        <div class="chain-logo" style="background:rgba(255,255,255,0.05)">${c.logo}</div>
+        <div class="chain-name">${c.name}</div>
       </div>
       <div class="chain-posts">${c.posts}</div>
     </div>
   `).join('');
 }
 
-function like(btn) {
-  btn.classList.toggle('active');
-  const num = parseInt(btn.textContent.replace('❤️ ',''));
-  btn.innerHTML = `❤️ ${btn.classList.contains('active') ? num+1 : num-1}`;
+// RENDER BADGES
+function renderBadges() {
+  const grid = document.getElementById('badgesGrid');
+  grid.innerHTML = badges.map(b => b.tiers.map((tier, ti) => `
+    <div class="badge-card ${b.chain}" style="opacity:${tier.earned?1:0.55}">
+      <span class="badge-icon">${tier.earned ? b.icon : '🔒'}</span>
+      <div class="badge-chain-name">${b.name}</div>
+      <span class="badge-label">${tier.label}</span>
+      <div class="badge-desc">${tier.desc}</div>
+      <div class="badge-pill">${tier.req}</div>
+      ${tier.earned ? '<div class="badge-earned" style="color:#4dff91;margin-top:8px;font-size:0.7rem">✓ Earned</div>' : '<div class="badge-earned">Belum terbuka</div>'}
+    </div>
+  `).join('')).join('');
 }
 
-function selectChain(el) {
-  document.querySelectorAll('.chain-item').forEach(e => e.classList.remove('active'));
+// FILTER TABS
+function setTab(el) {
+  el.parentElement.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
 }
 
-// Filter tabs
-document.querySelectorAll('.filter-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
+// INIT
 renderTicker();
 renderFeed();
 renderStreakers();
 renderTopics();
 renderChains();
+renderBadges();
+
+// NAV ACTIVE STATE
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', function(e) {
+    document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
 </script>
 </body>
 </html>
